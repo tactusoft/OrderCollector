@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Tactic Collector</string>
+    <string name="company_name">Tatic Logistic</string>
+    <string name="image_description">Tatic Logistic</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="estado_oe_confirmada">Confirmada</string>
+    <string name="estado_oe_aceptada">Aceptada</string>
+    <string name="estado_oe_enjecucion">En Ejecución</string>
+    <string name="estado_oe_finalizada">Finalizada</string>
+
+    <string name="oe_msg_vacio">Inicialmente debe seleccionar una Bodega!</string>
+</resources>
