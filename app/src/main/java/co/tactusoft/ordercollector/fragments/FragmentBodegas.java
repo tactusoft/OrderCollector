@@ -15,7 +15,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import co.tactusoft.ordercollector.R;
@@ -25,7 +24,9 @@ import co.tactusoft.ordercollector.util.Constants;
 import co.tactusoft.ordercollector.util.Singleton;
 
 /**
- * Created by csarmiento on 27/05/16.
+ * Created by csarmiento
+ * 7/06/16
+ * csarmiento@gentemovil.co
  */
 public class FragmentBodegas extends Fragment {
 

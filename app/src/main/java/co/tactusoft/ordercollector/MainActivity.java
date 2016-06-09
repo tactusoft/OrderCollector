@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import java.io.IOException;
 
+import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.Usuario;
 import co.tactusoft.ordercollector.fragments.FragmentBodegas;
 import co.tactusoft.ordercollector.fragments.FragmentHome;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity
             Usuario usuario = dataBaseHelper.getUsuario();
             if(usuario != null) {
                 Singleton.getInstance().setUsuario(usuario);
+                OrdenesEntradas ordenesEntradas = dataBaseHelper.geOrdenesEntradas();
+                Singleton.getInstance().setOrdenesEntradas(ordenesEntradas);
             } else {
                 usuario = new Usuario();
                 usuario.setUsuarioId(1);

@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import co.tactusoft.ordercollector.R;
 
 /**
- * Created by anupamchugh on 10/12/15.
+ * Created by csarmiento
+ * 7/06/16
+ * csarmiento@gentemovil.co
  */
 public class FragmentHome extends Fragment {
 

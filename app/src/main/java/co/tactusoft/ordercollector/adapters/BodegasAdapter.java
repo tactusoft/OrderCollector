@@ -1,8 +1,7 @@
 package co.tactusoft.ordercollector.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +17,16 @@ import java.util.List;
 
 import co.tactusoft.ordercollector.R;
 import co.tactusoft.ordercollector.entities.Bodegas;
-import co.tactusoft.ordercollector.entities.Usuario;
 import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Singleton;
 
 /**
- * Created by csarmiento on 27/05/16.
+ * Created by csarmiento
+ * 7/06/16
+ * csarmiento@gentemovil.co
  */
 public class BodegasAdapter extends RecyclerView.Adapter {
-    private Context mContext;;
+    private Context mContext;
     private List<Bodegas> mDataSet = new ArrayList<>();
     private LayoutInflater mInflater;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
@@ -48,7 +48,7 @@ public class BodegasAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder h,final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
         final ViewHolder holder = (ViewHolder) h;
         if (mDataSet != null && 0 <= position && position < mDataSet.size()) {
             final Bodegas data = mDataSet.get(position);
@@ -57,10 +57,10 @@ public class BodegasAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (lastViewHolder != null) {
-                        lastViewHolder.frlItem.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+                        lastViewHolder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                     }
-                    holder.frlItem.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
-                    Bodegas selected = mDataSet.get(position);
+                    holder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                    Bodegas selected = mDataSet.get(holder.getAdapterPosition());
                     int bodegaId =  selected.getBodegaId();
                     Singleton.getInstance().getUsuario().setBodegaId(bodegaId);
                     dataBaseHelper.insertUsuario(Singleton.getInstance().getUsuario());
@@ -69,8 +69,8 @@ public class BodegasAdapter extends RecyclerView.Adapter {
                 }
             });
 
-            if(Singleton.getInstance().getUsuario().getBodegaId() == data.getBodegaId()) {
-                holder.frlItem.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
+            if(Singleton.getInstance().getUsuario().getBodegaId().intValue() == data.getBodegaId().intValue()) {
+                holder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 lastViewHolder = holder;
             }
 
@@ -83,22 +83,6 @@ public class BodegasAdapter extends RecyclerView.Adapter {
         if (mDataSet == null)
             return 0;
         return mDataSet.size();
-    }
-
-    /**
-     * Only if you need to restore open/close state when the orientation is changed.
-     * Call this method in {@link android.app.Activity#onSaveInstanceState(Bundle)}
-     */
-    public void saveStates(Bundle outState) {
-        binderHelper.saveStates(outState);
-    }
-
-    /**
-     * Only if you need to restore open/close state when the orientation is changed.
-     * Call this method in {@link android.app.Activity#onRestoreInstanceState(Bundle)}
-     */
-    public void restoreStates(Bundle inState) {
-        binderHelper.restoreStates(inState);
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {

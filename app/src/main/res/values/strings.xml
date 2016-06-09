@@ -13,5 +13,20 @@
     <string name="estado_oe_enjecucion">En Ejecución</string>
     <string name="estado_oe_finalizada">Finalizada</string>
 
+    <string name="oe_title">Orden de Entrada: %S</string>
+    <string name="oe_subtitle">Datos de la Orden</string>
+    <string name="oe_estado">Estado:</string>
+    <string name="oe_nro_orden">Nro Orden:</string>
+    <string name="oe_cliente">Cliente:</string>
+    <string name="oe_hora_llegada_esperada">Hora Llegada Esperada:</string>
+    <string name="oe_hora_llegada_real">Hora Llegada Real:</string>
+    <string name="oe_placa">Placa Vehículo:</string>
+    <string name="oe_opcion_1">Llegada de Vehículo</string>
+    <string name="oe_opcion_2">Conductor y Vehículo</string>
+    <string name="oe_opcion_3">Datos de Descarga</string>
+    <string name="oe_opcion_4">Novedades</string>
+    <string name="oe_opcion_5">Documentos</string>
+    <string name="oe_opcion_6">Salida de Vehículo</string>
     <string name="oe_msg_vacio">Inicialmente debe seleccionar una Bodega!</string>
+
 </resources>

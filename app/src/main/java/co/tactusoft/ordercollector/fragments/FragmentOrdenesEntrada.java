@@ -21,19 +21,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 import co.tactusoft.ordercollector.R;
-import co.tactusoft.ordercollector.adapters.OrdenEntradaAdapter;
+import co.tactusoft.ordercollector.adapters.OrdenesEntradaAdapter;
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.PaginadorOrdenesEntrada;
 import co.tactusoft.ordercollector.util.Constants;
 import co.tactusoft.ordercollector.util.Singleton;
 
 /**
- * Created by csarmiento on 27/05/16.
+ * Created by csarmiento
+ * 7/06/16
+ * csarmiento@gentemovil.co
  */
 public class FragmentOrdenesEntrada extends Fragment {
 
     ListView listView;
-    OrdenEntradaAdapter adapter;
+    OrdenesEntradaAdapter adapter;
     List<OrdenesEntradas> allList;
     List<OrdenesEntradas> list;
 
@@ -106,7 +108,7 @@ public class FragmentOrdenesEntrada extends Fragment {
                 list.add(row);
             }
         }
-        adapter = new OrdenEntradaAdapter(getActivity(), list);
+        adapter = new OrdenesEntradaAdapter(getActivity(), list);
         listView.setAdapter(adapter);
     }
 
@@ -116,7 +118,7 @@ public class FragmentOrdenesEntrada extends Fragment {
             try {
                 Integer bodegaId = Singleton.getInstance().getUsuario().getBodegaId();
                 if(bodegaId != null) {
-                    final String url = Constants.REST_URL + "ingresos/ordenes/ingresos?bodegaId=" + bodegaId;
+                    final String url = Constants.REST_URL + "/ingresos?bodegaId=" + bodegaId;
                     RestTemplate restTemplate = new RestTemplate();
                     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                     PaginadorOrdenesEntrada paginadorOrdenesEntrada = restTemplate.getForObject(url, PaginadorOrdenesEntrada.class);

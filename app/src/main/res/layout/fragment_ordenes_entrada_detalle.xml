@@ -1,46 +1,276 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="fill_parent"
+    <GridLayout
+        android:id="@+id/grd_datos"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:useDefaultMargins="true"
+        android:alignmentMode="alignBounds"
+        android:columnOrderPreserved="false"
+        android:columnCount="4"
+        android:layout_marginTop="5dp">
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Street"
-            android:layout_gravity="left"/>
+            android:text="@string/oe_subtitle"
+            android:textSize="25sp"
+            android:layout_columnSpan="4"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorAccent"/>
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="456546546"
-            android:layout_gravity="right"/>
+            android:text="@string/oe_estado"
+            android:layout_gravity="right"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/text_oe_estado"
+            android:ems="25"
+            android:enabled="false"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Street"
-            android:layout_gravity="left"/>
+            android:text="@string/oe_nro_orden"
+            android:layout_column="0"
+            android:layout_gravity="right"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/text_oe_nro_orden"
+            android:ems="25"
+            android:enabled="false"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/textView4"
+            android:text="@string/oe_cliente"
+            android:layout_column="0"
+            android:layout_gravity="right"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/text_oe_cliente"
+            android:ems="25"
+            android:enabled="false"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:text="@string/oe_hora_llegada_esperada"
+            android:layout_column="0"
+            android:layout_gravity="right"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/text_oe_hora_llegada_esperada"
+            android:ems="25"
+            android:enabled="false"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:text="@string/oe_hora_llegada_real"
+            android:layout_column="0"
+            android:layout_gravity="right"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/text_oe_hora_llegada_real"
+            android:ems="25"
+            android:enabled="false"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:text="@string/oe_placa"
+            android:layout_column="0"
+            android:layout_gravity="right"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/text_oe_placa"
+            android:ems="25"
+            android:enabled="false"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+    </GridLayout>
+
+    <LinearLayout
+        android:id="@+id/lyr_second"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:layout_below="@+id/grd_datos">
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="456546546"
-            android:layout_gravity="right"/>
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_oe_opcion_1"
+                android:src="@drawable/ic_action_clock"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:contentDescription="@string/image_description"/>
+
+            <TextView
+                android:text="@string/oe_opcion_1"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:layout_below="@+id/img_oe_opcion_1"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_oe_opcion_2"
+                android:src="@drawable/ic_action_bus"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:contentDescription="@string/image_description"/>
+
+            <TextView
+                android:text="@string/oe_opcion_2"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:layout_below="@+id/img_oe_opcion_2"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_oe_opcion_3"
+                android:src="@drawable/ic_action_cart"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:contentDescription="@string/image_description"/>
+
+            <TextView
+                android:text="@string/oe_opcion_3"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:layout_below="@+id/img_oe_opcion_3"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:layout_below="@+id/lyr_second">
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_oe_opcion_4"
+                android:src="@drawable/ic_action_bell"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:contentDescription="@string/image_description"/>
+
+            <TextView
+                android:text="@string/oe_opcion_4"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:layout_below="@+id/img_oe_opcion_4"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_oe_opcion_5"
+                android:src="@drawable/ic_action_copy"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:contentDescription="@string/image_description"/>
+
+            <TextView
+                android:text="@string/oe_opcion_5"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:layout_below="@+id/img_oe_opcion_5"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_oe_opcion_6"
+                android:src="@drawable/ic_action_import"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:contentDescription="@string/image_description"/>
+
+            <TextView
+                android:text="@string/oe_opcion_6"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:layout_below="@+id/img_oe_opcion_6"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
