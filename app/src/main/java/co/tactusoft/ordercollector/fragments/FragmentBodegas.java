@@ -1,5 +1,7 @@
 package co.tactusoft.ordercollector.fragments;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,7 +40,7 @@ public class FragmentBodegas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_bodegas, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rcv_bodegas);
-        new HttpRequestTask().execute();
+        new HttpRequestTask(getActivity()).execute();
         return rootView;
     }
 
@@ -49,6 +51,22 @@ public class FragmentBodegas extends Fragment {
     }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, List<Bodegas>> {
+
+        ProgressDialog progressDialog;
+
+        public HttpRequestTask(Context context) {
+            progressDialog = new ProgressDialog(context);
+        }
+
+        public void onPreExecute() {
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(getResources().getString(R.string.msg_loading));
+            progressDialog.show();
+        }
+
         @Override
         protected List<Bodegas> doInBackground(Void... params) {
             try {
@@ -68,6 +86,7 @@ public class FragmentBodegas extends Fragment {
         protected void onPostExecute(List<Bodegas> bodegasList) {
             list = bodegasList;
             setupList();
+            progressDialog.dismiss();
         }
     }
 }

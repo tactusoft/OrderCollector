@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,11 +23,15 @@ import co.tactusoft.ordercollector.entities.Usuario;
 import co.tactusoft.ordercollector.fragments.FragmentBodegas;
 import co.tactusoft.ordercollector.fragments.FragmentHome;
 import co.tactusoft.ordercollector.fragments.FragmentOrdenesEntrada;
+import co.tactusoft.ordercollector.fragments.FragmentOrdenesEntradaDetalle;
+import co.tactusoft.ordercollector.fragments.FragmentVehiculo;
 import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Singleton;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +41,28 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        if (drawer != null) {
+            drawer.setDrawerListener(toggle);
+        }
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
         try {
@@ -72,10 +83,13 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        String title = "Inicio";
+        showFragment(new FragmentHome(), R.string.navigation_item_home);
+    }
+
+    public void showFragment(Fragment fragment, int title) {
         getSupportActionBar().setTitle(title);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, new FragmentHome());
+        ft.replace(R.id.content_frame, fragment);
         ft.commit();
     }
 
@@ -85,6 +99,23 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            FragmentManager fm = getSupportFragmentManager();
+            for (Fragment frag : fm.getFragments()) {
+                if (frag!=null && frag.isVisible()) {
+                    if (frag instanceof FragmentOrdenesEntradaDetalle) {
+                        showFragment(new FragmentOrdenesEntrada(), R.string.navigation_item_oe);
+                        return;
+                    } else if (frag instanceof FragmentOrdenesEntrada) {
+                        showFragment(new FragmentHome(), R.string.navigation_item_home);
+                        navigationView.getMenu().getItem(0).setChecked(true);
+                        return;
+                    } else if (frag instanceof FragmentVehiculo) {
+                        showFragment(new FragmentOrdenesEntradaDetalle(), R.string.navigation_item_home);
+                        navigationView.getMenu().getItem(2).setChecked(true);
+                        return;
+                    }
+                }
+            }
             super.onBackPressed();
         }
     }
@@ -115,25 +146,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
-        String title = "";
+        Integer title = R.string.navigation_item_home;
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            title = "Inicio";
+            title = R.string.navigation_item_home;
             fragment = new FragmentHome();
-        } else if (id == R.id.nav_gallery) {
-            title = "Bodegas";
+        } else if (id == R.id.nav_bodegas) {
+            title = R.string.navigation_item_bodegas;
             fragment = new FragmentBodegas();
-        } else if (id == R.id.nav_slideshow) {
-            title = "Ordenes de Entrada";
+        } else if (id == R.id.nav_oe) {
+            title = R.string.navigation_item_oe;
             fragment = new FragmentOrdenesEntrada();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_os) {
+            title = R.string.navigation_item_os;
+        } else if (id == R.id.nav_close_session) {
 
         }
 
@@ -149,7 +178,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
 
         return true;
     }

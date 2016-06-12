@@ -3,6 +3,12 @@
     <string name="company_name">Tatic Logistic</string>
     <string name="image_description">Tatic Logistic</string>
 
+    <string name="navigation_item_home">Inicio</string>
+    <string name="navigation_item_bodegas">Bodegas</string>
+    <string name="navigation_item_oe">Ordenes de Entrada</string>
+    <string name="navigation_item_os">Ordenes de Salida</string>
+    <string name="navigation_item_close">Cerrar Sesión</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -28,5 +34,20 @@
     <string name="oe_opcion_5">Documentos</string>
     <string name="oe_opcion_6">Salida de Vehículo</string>
     <string name="oe_msg_vacio">Inicialmente debe seleccionar una Bodega!</string>
+
+    <string name="veh_title">Datos de Vehículo</string>
+    <string name="veh_transportadora">Transportadora</string>
+    <string name="veh_tipo">Tipo de Vehículo</string>
+    <string name="veh_placa">Placa Vehículo</string>
+    <string name="veh_remolque">Placa Remolque</string>
+
+    <string name="con_title">Datos del Conductor</string>
+    <string name="con_cedula">Cédula</string>
+    <string name="con_nombres">Nombres</string>
+    <string name="con_apellidos">Apellidos</string>
+    <string name="con_celular">Celular</string>
+
+    <string name="msg_loading">Espere un momento...</string>
+    <string name="msg_required">"Todos los datos son Obligatorios"</string>
 
 </resources>

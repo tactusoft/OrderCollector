@@ -1,5 +1,7 @@
 package co.tactusoft.ordercollector.fragments;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -56,7 +58,7 @@ public class FragmentOrdenesEntrada extends Fragment {
         listView = (ListView) rootView.findViewById(R.id.lsv_ordenes_entrada);
         TextView emptyText = (TextView)rootView.findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
-        new HttpRequestTask().execute();
+        new HttpRequestTask(getActivity()).execute();
         return rootView;
     }
 
@@ -113,6 +115,21 @@ public class FragmentOrdenesEntrada extends Fragment {
     }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, List<OrdenesEntradas>> {
+        ProgressDialog progressDialog;
+
+        public HttpRequestTask(Context context) {
+            progressDialog = new ProgressDialog(context);
+        }
+
+        public void onPreExecute() {
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(getResources().getString(R.string.msg_loading));
+            progressDialog.show();
+        }
+
         @Override
         protected List<OrdenesEntradas> doInBackground(Void... params) {
             try {
@@ -134,6 +151,7 @@ public class FragmentOrdenesEntrada extends Fragment {
         protected void onPostExecute(List<OrdenesEntradas> entryList) {
             allList = entryList;
             setupList();
+            progressDialog.dismiss();
         }
     }
 }

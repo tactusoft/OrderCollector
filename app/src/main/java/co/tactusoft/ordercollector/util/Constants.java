@@ -10,4 +10,12 @@ public class Constants {
     public enum TIPOS_ORDENES {
         ENTRADA, SALIDA
     }
+
+    public enum ESTADOS_ORDENES {
+        ACEPTADA, CONFIRMADA, EN_EJECUCION, FINALIZADA
+    }
+
+    public enum SEVERIDAD_ERRORES {
+        INFO, WARN, ERROR
+    }
 }
