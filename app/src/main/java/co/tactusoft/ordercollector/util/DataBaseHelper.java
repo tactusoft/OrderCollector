@@ -28,9 +28,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //The Android"s default system path of your application database.
     public String dbPath;
-    public static String DB_NAME = "/tactic.sqlite";
+    public static String DB_NAME = "tactic.sqlite";
     private SQLiteDatabase myDataBase;
     private final Context myContext;
+
+    String sqlOrdenesEntrada = "SELECT id, cliente_codigo, estado_orden, numero_documento_orden_cliente,\n" +
+            "fecha_planeada_entrega_minima, fecha_planeada_entrega_maxima, hora_planeada_entrega_minima,\n" +
+            "hora_planeada_entrega_maxima, fecha_actualizacion, usuario_actualizacion,\n" +
+            "fecha_confirmacion, usuario_confirmacion, fecha_aprobacion_cliente, usuario_aprobacion_cliente,\n" +
+            "transportadora_id, tipo_vehiculo_id, numero_placa_vehiculo, numero_placa_remolque,\n" +
+            "fecha_notificacion_dellegada, fecha_registro_dellegada, conductor_numero_identificacion, conductor_nombres,\n" +
+            "conductor_apellidos, conductor_telefono, bloqueado\n" +
+            "FROM ordenes_entrada\n";
 
     /**
      * Constructor
@@ -43,7 +52,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (myContext == null) {
             dbPath = "/data/data/co.tactusoft.ordercollector/databases/";
         } else {
-            dbPath = myContext.getFilesDir().getPath().replace("files", "databases");
+            dbPath = myContext.getFilesDir().getPath().replace("files", "databases") + "/";
         }
     }
 
@@ -53,9 +62,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void createDataBase() throws IOException {
         boolean dbExist = checkDataBase();
         if(!dbExist){
-            //By calling this method and empty database will be created into the default system path
-            //of your application so we are gonna be able to overwrite that database with our database.
-            this.getReadableDatabase();
+            try {
+                this.getWritableDatabase();
+            } catch (Exception e) {
+                try {
+                    copyDataBase();
+                } catch (IOException ex) {
+                    throw new Error("Error copying database");
+                }
+            }
             try {
                 copyDataBase();
             } catch (IOException e) {
@@ -197,13 +212,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         OrdenesEntradas object = null;
         try {
             openDataBase();
-            Cursor cur = myDataBase.rawQuery("SELECT id, cliente_codigo, estado_orden, numero_documento_orden_cliente, " +
-                    "fecha_planeada_entrega_minima, fecha_planeada_entrega_maxima, hora_planeada_entrega_minima, " +
-                    "hora_planeada_entrega_maxima, fecha_actualizacion, usuario_actualizacion, \n" +
-                    "fecha_confirmacion, usuario_confirmacion, fecha_aprobacion_cliente, usuario_aprobacion_cliente\n" +
-                    "transportadora_id, tipo_vehiculo_id, numero_placa_vehiculo, numero_placa_remolque\n" +
-                    "FROM ordenes_entrada\n" +
-                    "WHERE bloqueado = 1", new String[] {});
+            Cursor cur = myDataBase.rawQuery(sqlOrdenesEntrada + "WHERE bloqueado = 1", new String[] {});
             if (cur.moveToLast()) {
                 object = new OrdenesEntradas();
                 object.setId(cur.getInt(0));
@@ -223,6 +232,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setTransportadoraId(cur.getInt(14));
                 object.setTipoVehiculoId(cur.getInt(15));
                 object.setNumeroPlacaVehiculo(cur.getString(16));
+                object.setNumeroPlacaRemolque(cur.getString(17));
+                object.setFechaNotificacionDeLlegada(cur.getString(18));
+                object.setFechaRegistroDeLlegada(cur.getString(19));
+                object.setConductorNumeroIdentificacion(cur.getString(20));
+                object.setConductorNombres(cur.getString(21));
+                object.setConductorApellidos(cur.getString(22));
+                object.setConductorTelefono(cur.getString(23));
+                object.setBloqueado(cur.getInt(24) == 1);
             }
             cur.close();
         } catch (SQLException e) {
@@ -238,12 +255,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         OrdenesEntradas object;
         try {
             openDataBase();
-            Cursor cur = myDataBase.rawQuery("SELECT id, cliente_codigo, estado_orden, numero_documento_orden_cliente, " +
-                    "fecha_planeada_entrega_minima, fecha_planeada_entrega_maxima, hora_planeada_entrega_minima, " +
-                    "hora_planeada_entrega_maxima, fecha_actualizacion, usuario_actualizacion, \n" +
-                    "fecha_confirmacion, usuario_confirmacion, fecha_aprobacion_cliente, usuario_aprobacion_cliente\n" +
-                    "transportadora_id, tipo_vehiculo_id, numero_placa_vehiculo, numero_placa_remolque\n" +
-                    "FROM ordenes_entrada", new String[] {});
+            Cursor cur = myDataBase.rawQuery(sqlOrdenesEntrada, new String[] {});
             while (cur.moveToNext()) {
                 object = new OrdenesEntradas();
                 object.setId(cur.getInt(0));
@@ -263,6 +275,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setTransportadoraId(cur.getInt(14));
                 object.setTipoVehiculoId(cur.getInt(15));
                 object.setNumeroPlacaVehiculo(cur.getString(16));
+                object.setNumeroPlacaRemolque(cur.getString(17));
+                object.setFechaNotificacionDeLlegada(cur.getString(18));
+                object.setFechaRegistroDeLlegada(cur.getString(19));
+                object.setConductorNumeroIdentificacion(cur.getString(20));
+                object.setConductorNombres(cur.getString(21));
+                object.setConductorApellidos(cur.getString(22));
+                object.setConductorTelefono(cur.getString(23));
+                object.setBloqueado(cur.getInt(24) == 1);
                 result.add(object);
             }
             cur.close();
@@ -274,8 +294,49 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public Long insertOrdenesEntradas(OrdenesEntradas object) {
-        Long id = null;
+    public OrdenesEntradas getOrdenesEntradas(Integer id) {
+        OrdenesEntradas object = null;
+        try {
+            openDataBase();
+            Cursor cur = myDataBase.rawQuery(sqlOrdenesEntrada + "WHERE id = ?", new String[] { String.valueOf(id) });
+            if (cur.moveToLast()) {
+                object = new OrdenesEntradas();
+                object.setId(cur.getInt(0));
+                object.setClienteCodigo(cur.getString(1));
+                object.setEstadoOrden(cur.getString(2));
+                object.setNumeroDocumentoOrdenCliente(cur.getString(3));
+                object.setFechaPlaneadaEntregaMinima(cur.getString(4));
+                object.setFechaPlaneadaEntregaMaxima(cur.getString(5));
+                object.setHoraPlaneadaEntregaMinima(cur.getString(6));
+                object.setHoraPlaneadaEntregaMaxima(cur.getString(7));
+                object.setFechaActualizacion(cur.getString(8));
+                object.setUsuarioActualizacion(cur.getString(9));
+                object.setFechaConfirmacion(cur.getString(10));
+                object.setUsuarioConfirmacion(cur.getString(11));
+                object.setFechaAprobacionCliente(cur.getString(12));
+                object.setUsuarioAprobacionCliente(cur.getString(13));
+                object.setTransportadoraId(cur.getInt(14));
+                object.setTipoVehiculoId(cur.getInt(15));
+                object.setNumeroPlacaVehiculo(cur.getString(16));
+                object.setNumeroPlacaRemolque(cur.getString(17));
+                object.setFechaNotificacionDeLlegada(cur.getString(18));
+                object.setFechaRegistroDeLlegada(cur.getString(19));
+                object.setConductorNumeroIdentificacion(cur.getString(20));
+                object.setConductorNombres(cur.getString(21));
+                object.setConductorApellidos(cur.getString(22));
+                object.setConductorTelefono(cur.getString(23));
+                object.setBloqueado(cur.getInt(24) == 1);
+            }
+            cur.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+        return object;
+    }
+
+    public void insertOrdenesEntradas(OrdenesEntradas object) {
         ContentValues row = new ContentValues();
         try {
             openDataBase();
@@ -303,8 +364,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             row.put("conductor_nombres", object.getConductorNombres());
             row.put("conductor_apellidos", object.getConductorApellidos());
             row.put("conductor_telefono", object.getConductorTelefono());
-            row.put("bloqueado", object.getBloqueado());
-            id = myDataBase.insert("ordenes_entrada", null, row);
+            row.put("bloqueado", object.getBloqueado()?1:0);
+            long id = myDataBase.insert("ordenes_entrada", null, row);
             if (id == -1) {
                 myDataBase.update("ordenes_entrada", row,
                         "id = ?", new String[]{String.valueOf(object.getId())});
@@ -317,7 +378,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } finally {
             close();
         }
-        return id;
     }
 
     private Integer deleteTable(String table, String where) {

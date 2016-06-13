@@ -94,6 +94,8 @@ public class FragmentOrdenesEntradaDetalle extends Fragment {
         textOeCliente.setText(selected.getClienteCodigo());
         textOeHoraLlegadaEsperada.setText(selected.getFechaPlaneadaEntregaMaxima().replace("00:00",
                 selected.getHoraPlaneadaEntregaMaxima()));
+        textOeHoraLlegadaReal.setText(selected.getFechaRegistroDeLlegada());
+        textOePlaca.setText(selected.getNumeroPlacaVehiculo());
 
         if(!selected.getEstadoOrden().equals(Constants.ESTADOS_ORDENES.ACEPTADA.name())) {
            enabledOptions();
@@ -113,7 +115,7 @@ public class FragmentOrdenesEntradaDetalle extends Fragment {
         imgOeOpcion2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selected.getEstadoOrden().equals(Constants.ESTADOS_ORDENES.ACEPTADA.name())) {
+                if(!selected.getEstadoOrden().equals(Constants.ESTADOS_ORDENES.ACEPTADA.name())) {
                     showFragmentVehiculo();
                 }
             }
@@ -202,6 +204,7 @@ public class FragmentOrdenesEntradaDetalle extends Fragment {
                 selected.setFechaRegistroDeLlegada(respuestaDTO.getData().getFechaRegistroDeLlegada());
                 selected.setUsuarioActualizacion(respuestaDTO.getData().getUsuarioActualizacion());
                 dataBaseHelper.insertOrdenesEntradas(selected);
+                Singleton.getInstance().setOrdenesEntradas(selected);
                 showFragmentVehiculo();
                 enabledOptions();
             }

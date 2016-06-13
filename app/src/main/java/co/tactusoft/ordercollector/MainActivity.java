@@ -25,6 +25,7 @@ import co.tactusoft.ordercollector.fragments.FragmentHome;
 import co.tactusoft.ordercollector.fragments.FragmentOrdenesEntrada;
 import co.tactusoft.ordercollector.fragments.FragmentOrdenesEntradaDetalle;
 import co.tactusoft.ordercollector.fragments.FragmentVehiculo;
+import co.tactusoft.ordercollector.fragments.FragmentVehiculoFotos;
 import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Singleton;
 
@@ -111,7 +112,9 @@ public class MainActivity extends AppCompatActivity
                         return;
                     } else if (frag instanceof FragmentVehiculo) {
                         showFragment(new FragmentOrdenesEntradaDetalle(), R.string.navigation_item_home);
-                        navigationView.getMenu().getItem(2).setChecked(true);
+                        return;
+                    } else if (frag instanceof FragmentVehiculoFotos) {
+                        showFragment(FragmentVehiculo.newInstance(Singleton.getInstance().getOrdenesEntradas()), R.string.navigation_item_oe);
                         return;
                     }
                 }

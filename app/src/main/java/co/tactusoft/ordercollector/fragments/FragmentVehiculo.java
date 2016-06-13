@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import co.tactusoft.ordercollector.MainActivity;
 import co.tactusoft.ordercollector.R;
 import co.tactusoft.ordercollector.entities.OrdenesEntradaPUT;
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
@@ -77,6 +80,14 @@ public class FragmentVehiculo extends Fragment {
         dataBaseHelper = new DataBaseHelper(getActivity());
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_vehiculo, container, false);
+
+        MainActivity mainActivity = ((MainActivity)getActivity());
+        ActionBar actionBar = mainActivity.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(String.format(getResources().getString(R.string.oe_title),
+                    ordenesEntradas.getNumeroDocumentoOrdenCliente()));
+        }
+
         spnTransportadoras = (Spinner) rootView.findViewById(R.id.spn_transportadoras);
         spnTiposVehiculos = (Spinner) rootView.findViewById(R.id.spn_tipos_vehiculos);
         inputVehPlaca = (EditText) rootView.findViewById(R.id.input_veh_placa);
@@ -85,6 +96,14 @@ public class FragmentVehiculo extends Fragment {
         inputConNombres = (EditText) rootView.findViewById(R.id.input_con_nombres);
         inputConApellidos = (EditText) rootView.findViewById(R.id.input_con_apellidos);
         inputConCelular = (EditText) rootView.findViewById(R.id.input_con_celular);
+
+        inputVehPlaca.setText(ordenesEntradas.getNumeroPlacaVehiculo());
+        inputVehRemolque.setText(ordenesEntradas.getNumeroPlacaRemolque());
+        inputConCedula.setText(ordenesEntradas.getConductorNumeroIdentificacion());
+        inputConNombres.setText(ordenesEntradas.getConductorNombres());
+        inputConApellidos.setText(ordenesEntradas.getConductorApellidos());
+        inputConCelular.setText(ordenesEntradas.getConductorTelefono());
+
         new TransportadorasHttpRequestTask(getActivity()).execute();
         return rootView;
     }
@@ -116,12 +135,17 @@ public class FragmentVehiculo extends Fragment {
                     ordenesEntradas.setTransportadoraId(transportadoraId);
                     ordenesEntradas.setNumeroPlacaVehiculo(vehPlaca);
                     ordenesEntradas.setNumeroPlacaRemolque(vehRemolque);
-                    ordenesEntradas.setNumeroPlacaVehiculo(conCedula);
+                    ordenesEntradas.setConductorNumeroIdentificacion(conCedula);
                     ordenesEntradas.setConductorApellidos(conApellidos);
                     ordenesEntradas.setConductorNombres(conNombres);
                     ordenesEntradas.setConductorTelefono(conCelular);
                     new SaveHttpRequestTask(getActivity()).execute();
                 }
+                break;
+            case R.id.item_photos:
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, FragmentVehiculoFotos.newInstance(ordenesEntradas));
+                ft.commit();
                 break;
             default:
                 break;
@@ -276,6 +300,7 @@ public class FragmentVehiculo extends Fragment {
                 ordenesEntradas.setFechaRegistroDeLlegada(respuestaDTO.getData().getFechaRegistroDeLlegada());
                 ordenesEntradas.setUsuarioActualizacion(respuestaDTO.getData().getUsuarioActualizacion());
                 dataBaseHelper.insertOrdenesEntradas(ordenesEntradas);
+                Singleton.getInstance().setOrdenesEntradas(ordenesEntradas);
                 Toast.makeText(getActivity(), R.string.msg_ok, Toast.LENGTH_SHORT).show();
             }
         }

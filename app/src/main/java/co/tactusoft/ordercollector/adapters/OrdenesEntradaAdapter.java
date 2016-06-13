@@ -90,11 +90,17 @@ public class OrdenesEntradaAdapter extends ArrayAdapter<OrdenesEntradas> {
                 @Override
                 public void onClick(View v) {
                     OrdenesEntradas selected = getItem(position);
-                    selected.setBloqueado(true);
                     int selectedId =  selected.getId();
-                    Singleton.getInstance().setOrdenesEntradas(selected);
+                    dataBaseHelper.getListOrdenesEntradas();
                     dataBaseHelper.updateOrdenesEntradaBloquedas();
+                    OrdenesEntradas ordenesEntradasTemp = dataBaseHelper.getOrdenesEntradas(selectedId);
+                    if (ordenesEntradasTemp != null) {
+                        selected = ordenesEntradasTemp;
+                    }
+                    selected.setBloqueado(true);
                     dataBaseHelper.insertOrdenesEntradas(selected);
+                    dataBaseHelper.getListOrdenesEntradas();
+                    Singleton.getInstance().setOrdenesEntradas(selected);
                     binderHelper.closeLayout(String.valueOf(selectedId));
                     notifyDataSetChanged();
                     FragmentTransaction ft = ((MainActivity)mContext).getSupportFragmentManager().beginTransaction();

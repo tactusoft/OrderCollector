@@ -13,11 +13,5 @@
         android:icon="@drawable/ic_action_picture"
         app:showAsAction="always"
         android:title="Descargar"/>
-    <item
-        android:id="@+id/item_identify"
-        android:icon="@drawable/ic_action_refresh"
-        android:title="Editar"
-        app:showAsAction="always"
-        android:visible="false"/>
 
 </menu>
