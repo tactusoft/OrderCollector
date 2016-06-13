@@ -14,6 +14,7 @@ public class FotoDesc implements Serializable {
     private String codigo;
     private String descripcion;
     private Bitmap bitmap;
+    private Integer fotoOmision;
 
     public FotoDesc() {
     }
@@ -44,5 +45,13 @@ public class FotoDesc implements Serializable {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public Integer getFotoOmision() {
+        return fotoOmision;
+    }
+
+    public void setFotoOmision(Integer fotoOmision) {
+        this.fotoOmision = fotoOmision;
     }
 }

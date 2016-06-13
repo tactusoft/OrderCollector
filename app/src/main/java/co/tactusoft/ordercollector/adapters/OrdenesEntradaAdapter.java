@@ -20,6 +20,7 @@ import co.tactusoft.ordercollector.MainActivity;
 import co.tactusoft.ordercollector.R;
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.fragments.FragmentOrdenesEntradaDetalle;
+import co.tactusoft.ordercollector.util.Constants;
 import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Singleton;
 
@@ -33,9 +34,6 @@ public class OrdenesEntradaAdapter extends ArrayAdapter<OrdenesEntradas> {
     private DataBaseHelper dataBaseHelper;
     private final LayoutInflater mInflater;
     private final ViewBinderHelper binderHelper;
-
-    private static final int TYPE_ITEM_COLORED = 1;
-    private static final int TYPE_ITEM_NORMAL = 0;
 
     public OrdenesEntradaAdapter(Context context, List<OrdenesEntradas> objects) {
         super(context, R.layout.row_ordenes_entrada, objects);
@@ -52,7 +50,7 @@ public class OrdenesEntradaAdapter extends ArrayAdapter<OrdenesEntradas> {
         return (Singleton.getInstance().getOrdenesEntradas() !=null &&
                 Singleton.getInstance().getOrdenesEntradas().getId() !=null &&
                 item.getId().intValue() == Singleton.getInstance().getOrdenesEntradas().getId().intValue())
-                ? TYPE_ITEM_COLORED : TYPE_ITEM_NORMAL;
+                ? Constants.TYPE_ITEM_COLORED : Constants.TYPE_ITEM_NORMAL;
     }
 
     @Override
@@ -92,14 +90,12 @@ public class OrdenesEntradaAdapter extends ArrayAdapter<OrdenesEntradas> {
                     OrdenesEntradas selected = getItem(position);
                     int selectedId =  selected.getId();
                     dataBaseHelper.getListOrdenesEntradas();
-                    dataBaseHelper.updateOrdenesEntradaBloquedas();
                     OrdenesEntradas ordenesEntradasTemp = dataBaseHelper.getOrdenesEntradas(selectedId);
                     if (ordenesEntradasTemp != null) {
                         selected = ordenesEntradasTemp;
                     }
                     selected.setBloqueado(true);
                     dataBaseHelper.insertOrdenesEntradas(selected);
-                    dataBaseHelper.getListOrdenesEntradas();
                     Singleton.getInstance().setOrdenesEntradas(selected);
                     binderHelper.closeLayout(String.valueOf(selectedId));
                     notifyDataSetChanged();
@@ -111,11 +107,11 @@ public class OrdenesEntradaAdapter extends ArrayAdapter<OrdenesEntradas> {
         }
 
         switch (getItemViewType(position)) {
-            case TYPE_ITEM_COLORED:
+            case Constants.TYPE_ITEM_COLORED:
                 holder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 holder.btnEditSkyline.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 break;
-            case TYPE_ITEM_NORMAL:
+            case Constants.TYPE_ITEM_NORMAL:
                 holder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 holder.btnEditSkyline.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 break;

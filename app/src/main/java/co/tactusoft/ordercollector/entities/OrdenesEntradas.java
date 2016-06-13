@@ -34,6 +34,7 @@ public class OrdenesEntradas implements Serializable {
     private String conductorApellidos;
     private String conductorTelefono;
     private Boolean bloqueado;
+    private Integer sincronizado;
 
     public OrdenesEntradas() {
     }
@@ -236,5 +237,13 @@ public class OrdenesEntradas implements Serializable {
 
     public void setBloqueado(Boolean bloqueado) {
         this.bloqueado = bloqueado;
+    }
+
+    public Integer getSincronizado() {
+        return sincronizado;
+    }
+
+    public void setSincronizado(Integer sincronizado) {
+        this.sincronizado = sincronizado;
     }
 }

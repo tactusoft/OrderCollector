@@ -3,9 +3,18 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcv_bodegas"
+    <ListView
+        android:id="@+id/lsv_bodegas"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:divider="@null"/>
+
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bod_msg_vacio"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"/>
 
 </LinearLayout>

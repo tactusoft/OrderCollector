@@ -18,6 +18,7 @@ import java.util.List;
 
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.Usuario;
+import co.tactusoft.ordercollector.entities.VehiculosFoto;
 
 /**
  * Created by csarmiento
@@ -38,7 +39,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             "fecha_confirmacion, usuario_confirmacion, fecha_aprobacion_cliente, usuario_aprobacion_cliente,\n" +
             "transportadora_id, tipo_vehiculo_id, numero_placa_vehiculo, numero_placa_remolque,\n" +
             "fecha_notificacion_dellegada, fecha_registro_dellegada, conductor_numero_identificacion, conductor_nombres,\n" +
-            "conductor_apellidos, conductor_telefono, bloqueado\n" +
+            "conductor_apellidos, conductor_telefono, bloqueado, sincronizado\n" +
             "FROM ordenes_entrada\n";
 
     /**
@@ -240,6 +241,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setConductorApellidos(cur.getString(22));
                 object.setConductorTelefono(cur.getString(23));
                 object.setBloqueado(cur.getInt(24) == 1);
+                object.setSincronizado(cur.getInt(25));
             }
             cur.close();
         } catch (SQLException e) {
@@ -283,6 +285,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setConductorApellidos(cur.getString(22));
                 object.setConductorTelefono(cur.getString(23));
                 object.setBloqueado(cur.getInt(24) == 1);
+                object.setSincronizado(cur.getInt(25));
                 result.add(object);
             }
             cur.close();
@@ -326,6 +329,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setConductorApellidos(cur.getString(22));
                 object.setConductorTelefono(cur.getString(23));
                 object.setBloqueado(cur.getInt(24) == 1);
+                object.setSincronizado(cur.getInt(25));
             }
             cur.close();
         } catch (SQLException e) {
@@ -378,6 +382,59 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } finally {
             close();
         }
+    }
+
+    public void insertVehiculosFoto(VehiculosFoto object) {
+        ContentValues row = new ContentValues();
+        try {
+            openDataBase();
+            row.put("orden_id", object.getOrdenId());
+            row.put("codigo", object.getCodigo());
+            row.put("descripcion", object.getDescripcion());
+            row.put("foto", object.getFoto());
+            row.put("foto_omision", object.getFotoOmision());
+            row.put("sincronizado", object.getSincronizado());
+            long id = myDataBase.insert("vehiculos_foto", null, row);
+            if (id == -1) {
+                myDataBase.update("vehiculos_foto", row,
+                        "orden_id = ? AND codigo = ?", new String[]{String.valueOf(object.getOrdenId()),object.getCodigo()});
+            } else {
+                object.setId(id);
+            }
+        } catch (SQLiteConstraintException e) {
+            myDataBase.update("vehiculos_foto", row,
+                    "orden_id = ? AND codigo = ?", new String[]{String.valueOf(object.getOrdenId()),object.getCodigo()});
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
+    public List<VehiculosFoto> getListVehiculosFoto(Integer ordenId) {
+        List<VehiculosFoto> list = new LinkedList<>();
+        VehiculosFoto object;
+        try {
+            openDataBase();
+            Cursor cur = myDataBase.rawQuery("SELECT id, orden_id, codigo, descripcion, foto, foto_omision, sincronizado FROM vehiculos_foto WHERE orden_id = ? ORDER BY id", new String[] { String.valueOf(ordenId) });
+            while (cur.moveToNext()) {
+                object = new VehiculosFoto();
+                object.setId(cur.getLong(0));
+                object.setOrdenId(cur.getInt(1));
+                object.setCodigo(cur.getString(2));
+                object.setDescripcion(cur.getString(3));;
+                object.setFoto(cur.getString(4));
+                object.setFotoOmision(cur.getInt(5));
+                object.setSincronizado(cur.getInt(6));
+                list.add(object);
+            }
+            cur.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+        return list;
     }
 
     private Integer deleteTable(String table, String where) {

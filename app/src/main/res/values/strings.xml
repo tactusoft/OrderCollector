@@ -19,6 +19,8 @@
     <string name="estado_oe_enjecucion">En Ejecución</string>
     <string name="estado_oe_finalizada">Finalizada</string>
 
+    <string name="bod_msg_vacio">Este usuario no tiene bodegas asignadas!</string>
+
     <string name="oe_title">Orden de Entrada: %S</string>
     <string name="oe_subtitle">Datos de la Orden</string>
     <string name="oe_estado">Estado:</string>

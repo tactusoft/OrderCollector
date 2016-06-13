@@ -15,6 +15,6 @@
         android:layout_height="wrap_content"
         android:text="@string/oe_msg_vacio"
         android:textColor="@color/colorAccent"
-        android:textSize="20dp"/>
+        android:textSize="20sp"/>
 
 </LinearLayout>

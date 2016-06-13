@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,6 +33,7 @@ import co.tactusoft.ordercollector.R;
 import co.tactusoft.ordercollector.adapters.FotoDescAdapter;
 import co.tactusoft.ordercollector.entities.FotoDesc;
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
+import co.tactusoft.ordercollector.entities.VehiculosFoto;
 import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Utils;
 
@@ -120,6 +122,30 @@ public class FragmentVehiculoFotos extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_save:
+                for(FotoDesc row:list) {
+                    VehiculosFoto vehiculosFoto = new VehiculosFoto();
+                    if(row.getFotoOmision() == 0) {
+                        String nameFile = "img_" + ordenesEntradas.getId() + "_" + row.getCodigo() + ".jpeg";
+                        Utils.saveImage(getActivity(), row.getBitmap(), nameFile);
+                        vehiculosFoto.setFoto(nameFile);
+                    }
+                    vehiculosFoto.setOrdenId(ordenesEntradas.getId());
+                    vehiculosFoto.setCodigo(row.getCodigo());
+                    vehiculosFoto.setDescripcion(row.getDescripcion());
+                    vehiculosFoto.setFotoOmision(row.getFotoOmision());
+                    vehiculosFoto.setSincronizado(0);
+                    dataBaseHelper.insertVehiculosFoto(vehiculosFoto);
+                }
+                Toast.makeText(getActivity(), R.string.msg_ok, Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK
                 && null != data) {
@@ -138,32 +164,53 @@ public class FragmentVehiculoFotos extends Fragment {
         Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_help);
         Bitmap icon = ((BitmapDrawable)drawable).getBitmap();
         dataBaseHelper = new DataBaseHelper(getActivity());
+        List<VehiculosFoto> vehiculosFotoList = dataBaseHelper.getListVehiculosFoto(ordenesEntradas.getId());
         list = new LinkedList<>();
-        FotoDesc fotoDesc =  new FotoDesc();
-        fotoDesc.setCodigo("FRENTE");
-        fotoDesc.setBitmap(icon);
-        fotoDesc.setDescripcion("Foto Frente");
-        list.add(fotoDesc);
-        fotoDesc =  new FotoDesc();
-        fotoDesc.setCodigo("OTROS");
-        fotoDesc.setBitmap(icon);
-        fotoDesc.setDescripcion("Foto Otros");
-        list.add(fotoDesc);
-        fotoDesc =  new FotoDesc();
-        fotoDesc.setCodigo("IZQUIERDO");
-        fotoDesc.setBitmap(icon);
-        fotoDesc.setDescripcion("Foto Lado Izquierdo");
-        list.add(fotoDesc);
-        fotoDesc =  new FotoDesc();
-        fotoDesc.setCodigo("DERECHO");
-        fotoDesc.setBitmap(icon);
-        fotoDesc.setDescripcion("Foto Lado Derecho");
-        list.add(fotoDesc);
-        fotoDesc =  new FotoDesc();
-        fotoDesc.setCodigo("PUERTA");
-        fotoDesc.setBitmap(icon);
-        fotoDesc.setDescripcion("Foto Puerta");
-        list.add(fotoDesc);
+        if(vehiculosFotoList.isEmpty()) {
+            FotoDesc fotoDesc = new FotoDesc();
+            fotoDesc.setCodigo("FRENTE");
+            fotoDesc.setBitmap(icon);
+            fotoDesc.setFotoOmision(1);
+            fotoDesc.setDescripcion("Foto Frente");
+            list.add(fotoDesc);
+            fotoDesc = new FotoDesc();
+            fotoDesc.setCodigo("OTROS");
+            fotoDesc.setBitmap(icon);
+            fotoDesc.setFotoOmision(1);
+            fotoDesc.setDescripcion("Foto Otros");
+            list.add(fotoDesc);
+            fotoDesc = new FotoDesc();
+            fotoDesc.setCodigo("IZQUIERDO");
+            fotoDesc.setBitmap(icon);
+            fotoDesc.setFotoOmision(1);
+            fotoDesc.setDescripcion("Foto Lado Izquierdo");
+            list.add(fotoDesc);
+            fotoDesc = new FotoDesc();
+            fotoDesc.setCodigo("DERECHO");
+            fotoDesc.setBitmap(icon);
+            fotoDesc.setFotoOmision(1);
+            fotoDesc.setDescripcion("Foto Lado Derecho");
+            list.add(fotoDesc);
+            fotoDesc = new FotoDesc();
+            fotoDesc.setCodigo("PUERTA");
+            fotoDesc.setBitmap(icon);
+            fotoDesc.setFotoOmision(1);
+            fotoDesc.setDescripcion("Foto Puerta");
+            list.add(fotoDesc);
+        } else {
+            for(VehiculosFoto vehiculosFoto:vehiculosFotoList) {
+                FotoDesc fotoDesc = new FotoDesc();
+                fotoDesc.setCodigo(vehiculosFoto.getCodigo());
+                fotoDesc.setDescripcion(vehiculosFoto.getDescripcion());
+                fotoDesc.setFotoOmision(vehiculosFoto.getFotoOmision());
+                if(fotoDesc.getFotoOmision() == 1) {
+                    fotoDesc.setBitmap(icon);
+                } else {
+                    fotoDesc.setBitmap(Utils.loadImageBitmap(getActivity(), vehiculosFoto.getFoto()));
+                }
+                list.add(fotoDesc);
+            }
+        }
     }
 
     private void loadPictureAction(Intent data) {
@@ -180,6 +227,7 @@ public class FragmentVehiculoFotos extends Fragment {
         }
         Bitmap pic = BitmapFactory.decodeFile(picturePath);
         list.get(picSelected).setBitmap(pic);
+        list.get(picSelected).setFotoOmision(0);
         androidGridView.setAdapter(new FotoDescAdapter(getActivity(), list));
     }
 
@@ -187,6 +235,7 @@ public class FragmentVehiculoFotos extends Fragment {
         Bundle extras = data.getExtras();
         Bitmap pic = (Bitmap) extras.get("data");
         list.get(picSelected).setBitmap(pic);
+        list.get(picSelected).setFotoOmision(0);
         androidGridView.setAdapter(new FotoDescAdapter(getActivity(), list));
     }
 

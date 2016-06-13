@@ -18,4 +18,7 @@ public class Constants {
     public enum SEVERIDAD_ERRORES {
         INFO, WARN, ERROR
     }
+
+    public static final int TYPE_ITEM_COLORED = 1;
+    public static final int TYPE_ITEM_NORMAL = 0;
 }

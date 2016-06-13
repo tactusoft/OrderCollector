@@ -6,17 +6,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by csarmiento
+ * Created by ºnto
  * 10/06/16
  * csarmiento@gentemovil.co
  */
@@ -64,5 +69,31 @@ public class Utils {
         } else {
             return true;
         }
+    }
+
+    public static void saveImage(Context context, Bitmap b, String imageName) {
+        FileOutputStream foStream;
+        try {
+            foStream = context.openFileOutput(imageName, Context.MODE_PRIVATE);
+            b.compress(Bitmap.CompressFormat.JPEG, 100, foStream);
+            foStream.close();
+        } catch (Exception e) {
+            Log.d("saveImage", "Exception 2, Something went wrong!");
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap loadImageBitmap(Context context, String imageName) {
+        Bitmap bitmap = null;
+        FileInputStream fiStream;
+        try {
+            fiStream = context.openFileInput(imageName);
+            bitmap = BitmapFactory.decodeStream(fiStream);
+            fiStream.close();
+        } catch (Exception e) {
+            Log.d("saveImage", "Exception 3, Something went wrong!");
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }
