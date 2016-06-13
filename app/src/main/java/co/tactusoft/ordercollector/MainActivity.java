@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
             Usuario usuario = dataBaseHelper.getUsuario();
             if(usuario != null) {
                 Singleton.getInstance().setUsuario(usuario);
-                OrdenesEntradas ordenesEntradas = dataBaseHelper.geOrdenesEntradas();
+                OrdenesEntradas ordenesEntradas = dataBaseHelper.getOrdenesEntradasBloqueada();
                 Singleton.getInstance().setOrdenesEntradas(ordenesEntradas);
             } else {
                 usuario = new Usuario();

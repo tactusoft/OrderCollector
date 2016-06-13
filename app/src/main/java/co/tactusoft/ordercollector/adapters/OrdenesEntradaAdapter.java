@@ -77,19 +77,23 @@ public class OrdenesEntradaAdapter extends ArrayAdapter<OrdenesEntradas> {
         final OrdenesEntradas item = getItem(position);
         if (item != null) {
             binderHelper.bind(holder.swipeLayout, String.valueOf(item.getId()));
-            //holder.imageView.setText(String.valueOf(item.getId()));
-            holder.textView2.setText("Estado: " + item.getEstadoOrden());
-            holder.textView3.setText("Nro. Orden: " + item.getNumeroDocumentoOrdenCliente());
-            holder.textView4.setText("Hora de LLegada: "
-                    + item.getFechaPlaneadaEntregaMaxima().replace("00:00",item.getHoraPlaneadaEntregaMaxima()));
-            holder.textView5.setText("Cliente: " + item.getClienteCodigo());
+            holder.imageView.setImageResource(R.drawable.ic_oe_1);
+            holder.textView2.setText(String.format(mContext.getResources().getString(R.string.oe_estado_par),
+                    item.getEstadoOrden()));
+            holder.textView3.setText(String.format(mContext.getResources().getString(R.string.oe_cliente_par),
+                    item.getNumeroDocumentoOrdenCliente()));
+            holder.textView4.setText(String.format(mContext.getResources().getString(R.string.oe_hora_llegada_par),
+                    item.getFechaPlaneadaEntregaMaxima().replace("00:00",item.getHoraPlaneadaEntregaMaxima())));
+            holder.textView5.setText(String.format(mContext.getResources().getString(R.string.oe_cliente_par),
+                    item.getClienteCodigo()));
             holder.btnEditSkyline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     OrdenesEntradas selected = getItem(position);
+                    selected.setBloqueado(true);
                     int selectedId =  selected.getId();
                     Singleton.getInstance().setOrdenesEntradas(selected);
-                    dataBaseHelper.deleteOrdenesEntradas();
+                    dataBaseHelper.updateOrdenesEntradaBloquedas();
                     dataBaseHelper.insertOrdenesEntradas(selected);
                     binderHelper.closeLayout(String.valueOf(selectedId));
                     notifyDataSetChanged();

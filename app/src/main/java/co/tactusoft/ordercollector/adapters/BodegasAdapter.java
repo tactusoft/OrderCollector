@@ -69,7 +69,8 @@ public class BodegasAdapter extends RecyclerView.Adapter {
                 }
             });
 
-            if(Singleton.getInstance().getUsuario().getBodegaId().intValue() == data.getBodegaId().intValue()) {
+            if(Singleton.getInstance().getUsuario().getBodegaId()!= null &&
+                    Singleton.getInstance().getUsuario().getBodegaId().intValue() == data.getBodegaId().intValue()) {
                 holder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 lastViewHolder = holder;
             }

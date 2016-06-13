@@ -3,6 +3,7 @@ package co.tactusoft.ordercollector.util;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,28 +13,38 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.Usuario;
 
 /**
- * Created by csarmiento on 11/04/16.
+ * Created by csarmiento
+ * 12/06/16
+ * csarmiento@gentemovil.co
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     //The Android"s default system path of your application database.
-    public static String DB_PATH =  "/data/data/co.tactusoft.ordercollector/databases/";
-    public static String DB_NAME = "tactic.sqlite";
+    public String dbPath;
+    public static String DB_NAME = "/tactic.sqlite";
     private SQLiteDatabase myDataBase;
     private final Context myContext;
+
     /**
      * Constructor
      * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
-     * @param context
+     * @param context Application Context
      */
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, 1);
         this.myContext = context;
+        if (myContext == null) {
+            dbPath = "/data/data/co.tactusoft.ordercollector/databases/";
+        } else {
+            dbPath = myContext.getFilesDir().getPath().replace("files", "databases");
+        }
     }
 
     /**
@@ -60,7 +71,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private boolean checkDataBase(){
         SQLiteDatabase checkDB = null;
         try{
-            String myPath = DB_PATH + DB_NAME;
+            String myPath = dbPath + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
         }catch(SQLiteException e){
             //database does"t exist yet.
@@ -81,7 +92,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         InputStream myInput = myContext.getAssets().open(DB_NAME);
 
         // Path to the just created empty db
-        String outFileName = DB_PATH + DB_NAME;
+        String outFileName = dbPath + DB_NAME;
 
         //Open the empty db as the output stream
         OutputStream myOutput = new FileOutputStream(outFileName);
@@ -101,7 +112,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public SQLiteDatabase openDataBase() throws SQLException {
         //Open the database
-        String myPath = DB_PATH + DB_NAME;
+        String myPath = dbPath + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
         return myDataBase;
     }
@@ -182,7 +193,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public OrdenesEntradas geOrdenesEntradas() {
+    public OrdenesEntradas getOrdenesEntradasBloqueada() {
         OrdenesEntradas object = null;
         try {
             openDataBase();
@@ -190,7 +201,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     "fecha_planeada_entrega_minima, fecha_planeada_entrega_maxima, hora_planeada_entrega_minima, " +
                     "hora_planeada_entrega_maxima, fecha_actualizacion, usuario_actualizacion, \n" +
                     "fecha_confirmacion, usuario_confirmacion, fecha_aprobacion_cliente, usuario_aprobacion_cliente\n" +
-                    "FROM ordenes_entrada", new String[] {});
+                    "transportadora_id, tipo_vehiculo_id, numero_placa_vehiculo, numero_placa_remolque\n" +
+                    "FROM ordenes_entrada\n" +
+                    "WHERE bloqueado = 1", new String[] {});
             if (cur.moveToLast()) {
                 object = new OrdenesEntradas();
                 object.setId(cur.getInt(0));
@@ -207,6 +220,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setUsuarioConfirmacion(cur.getString(11));
                 object.setFechaAprobacionCliente(cur.getString(12));
                 object.setUsuarioAprobacionCliente(cur.getString(13));
+                object.setTransportadoraId(cur.getInt(14));
+                object.setTipoVehiculoId(cur.getInt(15));
+                object.setNumeroPlacaVehiculo(cur.getString(16));
             }
             cur.close();
         } catch (SQLException e) {
@@ -217,11 +233,52 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return object;
     }
 
-    public Long insertOrdenesEntradas(OrdenesEntradas object) {
-        Long id = null;
+    public List<OrdenesEntradas> getListOrdenesEntradas() {
+        List<OrdenesEntradas> result = new LinkedList<>();
+        OrdenesEntradas object;
         try {
             openDataBase();
-            ContentValues row = new ContentValues();
+            Cursor cur = myDataBase.rawQuery("SELECT id, cliente_codigo, estado_orden, numero_documento_orden_cliente, " +
+                    "fecha_planeada_entrega_minima, fecha_planeada_entrega_maxima, hora_planeada_entrega_minima, " +
+                    "hora_planeada_entrega_maxima, fecha_actualizacion, usuario_actualizacion, \n" +
+                    "fecha_confirmacion, usuario_confirmacion, fecha_aprobacion_cliente, usuario_aprobacion_cliente\n" +
+                    "transportadora_id, tipo_vehiculo_id, numero_placa_vehiculo, numero_placa_remolque\n" +
+                    "FROM ordenes_entrada", new String[] {});
+            while (cur.moveToNext()) {
+                object = new OrdenesEntradas();
+                object.setId(cur.getInt(0));
+                object.setClienteCodigo(cur.getString(1));
+                object.setEstadoOrden(cur.getString(2));
+                object.setNumeroDocumentoOrdenCliente(cur.getString(3));
+                object.setFechaPlaneadaEntregaMinima(cur.getString(4));
+                object.setFechaPlaneadaEntregaMaxima(cur.getString(5));
+                object.setHoraPlaneadaEntregaMinima(cur.getString(6));
+                object.setHoraPlaneadaEntregaMaxima(cur.getString(7));
+                object.setFechaActualizacion(cur.getString(8));
+                object.setUsuarioActualizacion(cur.getString(9));
+                object.setFechaConfirmacion(cur.getString(10));
+                object.setUsuarioConfirmacion(cur.getString(11));
+                object.setFechaAprobacionCliente(cur.getString(12));
+                object.setUsuarioAprobacionCliente(cur.getString(13));
+                object.setTransportadoraId(cur.getInt(14));
+                object.setTipoVehiculoId(cur.getInt(15));
+                object.setNumeroPlacaVehiculo(cur.getString(16));
+                result.add(object);
+            }
+            cur.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+        return result;
+    }
+
+    public Long insertOrdenesEntradas(OrdenesEntradas object) {
+        Long id = null;
+        ContentValues row = new ContentValues();
+        try {
+            openDataBase();
             row.put("id", object.getId());
             row.put("cliente_codigo", object.getClienteCodigo());
             row.put("estado_orden", object.getEstadoOrden());
@@ -236,11 +293,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             row.put("usuario_confirmacion", object.getUsuarioConfirmacion());
             row.put("fecha_aprobacion_cliente", object.getFechaAprobacionCliente());
             row.put("usuario_aprobacion_cliente", object.getUsuarioAprobacionCliente());
+            row.put("transportadora_id", object.getTransportadoraId());
+            row.put("tipo_vehiculo_id", object.getTipoVehiculoId());
+            row.put("numero_placa_vehiculo", object.getNumeroPlacaVehiculo());
+            row.put("numero_placa_remolque", object.getNumeroPlacaRemolque());
+            row.put("fecha_notificacion_dellegada", object.getFechaNotificacionDeLlegada());
+            row.put("fecha_registro_dellegada", object.getFechaRegistroDeLlegada());
+            row.put("conductor_numero_identificacion", object.getConductorNumeroIdentificacion());
+            row.put("conductor_nombres", object.getConductorNombres());
+            row.put("conductor_apellidos", object.getConductorApellidos());
+            row.put("conductor_telefono", object.getConductorTelefono());
+            row.put("bloqueado", object.getBloqueado());
             id = myDataBase.insert("ordenes_entrada", null, row);
-            if(id == -1) {
+            if (id == -1) {
                 myDataBase.update("ordenes_entrada", row,
-                        "id = ?", new String[] { String.valueOf(object.getId()) });
+                        "id = ?", new String[]{String.valueOf(object.getId())});
             }
+        } catch (SQLiteConstraintException e) {
+            myDataBase.update("ordenes_entrada", row,
+                    "id = ?", new String[]{String.valueOf(object.getId())});
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -249,15 +320,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public Integer deleteOrdenesEntradas() {
-        return deleteTable("ordenes_entrada","1=1");
-    }
-
     private Integer deleteTable(String table, String where) {
         Integer id = null;
         try {
             openDataBase();
             id = myDataBase.delete(table, where, null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+        return id;
+    }
+
+    public Integer updateOrdenesEntradaBloquedas() {
+        Integer id = null;
+        try {
+            openDataBase();
+            ContentValues row = new ContentValues();
+            row.put("bloqueado", "0");
+            id = myDataBase.update("ordenes_entrada", row,
+                    "1 = 1", new String[] { });
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

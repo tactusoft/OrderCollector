@@ -3,7 +3,9 @@ package co.tactusoft.ordercollector.entities;
 import java.io.Serializable;
 
 /**
- * Created by csarmiento on 27/05/16.
+ * Created by csarmiento
+ * 10/06/16
+ * csarmiento@gentemovil.co
  */
 public class OrdenesEntradas implements Serializable {
 
@@ -21,6 +23,17 @@ public class OrdenesEntradas implements Serializable {
     private String usuarioConfirmacion;
     private String fechaAprobacionCliente;
     private String usuarioAprobacionCliente;
+    private Integer transportadoraId;
+    private Integer tipoVehiculoId;
+    private String numeroPlacaVehiculo;
+    private String numeroPlacaRemolque;
+    private String fechaNotificacionDeLlegada;
+    private String fechaRegistroDeLlegada;
+    private String conductorNumeroIdentificacion;
+    private String conductorNombres;
+    private String conductorApellidos;
+    private String conductorTelefono;
+    private Boolean bloqueado;
 
     public OrdenesEntradas() {
     }
@@ -135,5 +148,93 @@ public class OrdenesEntradas implements Serializable {
 
     public void setUsuarioAprobacionCliente(String usuarioAprobacionCliente) {
         this.usuarioAprobacionCliente = usuarioAprobacionCliente;
+    }
+
+    public Integer getTransportadoraId() {
+        return transportadoraId;
+    }
+
+    public void setTransportadoraId(Integer transportadoraId) {
+        this.transportadoraId = transportadoraId;
+    }
+
+    public Integer getTipoVehiculoId() {
+        return tipoVehiculoId;
+    }
+
+    public void setTipoVehiculoId(Integer tipoVehiculoId) {
+        this.tipoVehiculoId = tipoVehiculoId;
+    }
+
+    public String getNumeroPlacaVehiculo() {
+        return numeroPlacaVehiculo;
+    }
+
+    public void setNumeroPlacaVehiculo(String numeroPlacaVehiculo) {
+        this.numeroPlacaVehiculo = numeroPlacaVehiculo;
+    }
+
+    public String getNumeroPlacaRemolque() {
+        return numeroPlacaRemolque;
+    }
+
+    public void setNumeroPlacaRemolque(String numeroPlacaRemolque) {
+        this.numeroPlacaRemolque = numeroPlacaRemolque;
+    }
+
+    public String getFechaNotificacionDeLlegada() {
+        return fechaNotificacionDeLlegada;
+    }
+
+    public void setFechaNotificacionDeLlegada(String fechaNotificacionDeLlegada) {
+        this.fechaNotificacionDeLlegada = fechaNotificacionDeLlegada;
+    }
+
+    public String getFechaRegistroDeLlegada() {
+        return fechaRegistroDeLlegada;
+    }
+
+    public void setFechaRegistroDeLlegada(String fechaRegistroDeLlegada) {
+        this.fechaRegistroDeLlegada = fechaRegistroDeLlegada;
+    }
+
+    public String getConductorNumeroIdentificacion() {
+        return conductorNumeroIdentificacion;
+    }
+
+    public void setConductorNumeroIdentificacion(String conductorNumeroIdentificacion) {
+        this.conductorNumeroIdentificacion = conductorNumeroIdentificacion;
+    }
+
+    public String getConductorNombres() {
+        return conductorNombres;
+    }
+
+    public void setConductorNombres(String conductorNombres) {
+        this.conductorNombres = conductorNombres;
+    }
+
+    public String getConductorApellidos() {
+        return conductorApellidos;
+    }
+
+    public void setConductorApellidos(String conductorApellidos) {
+        this.conductorApellidos = conductorApellidos;
+    }
+
+    public String getConductorTelefono() {
+        return conductorTelefono;
+    }
+
+    public void setConductorTelefono(String conductorTelefono) {
+        this.conductorTelefono = conductorTelefono;
+    }
+
+    public Boolean getBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(Boolean bloqueado) {
+        this.bloqueado = bloqueado;
     }
 }
