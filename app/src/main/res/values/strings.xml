@@ -40,6 +40,7 @@
     <string name="oe_nro_orden_par">Nro Orden: %s</string>
     <string name="oe_hora_llegada_par">Hora de Llegada: %s</string>
     <string name="oe_cliente_par">Cliente: %s</string>
+    <string name="oe_obs">Observaciones</string>
 
     <string name="veh_title">Datos de Vehículo</string>
     <string name="veh_transportadora">Transportadora</string>
@@ -54,6 +55,8 @@
     <string name="con_celular">Celular</string>
 
     <string name="veh_fot_title">Fotos del Vehículo</string>
+    <string name="oe_salida_subtitle">Datos de Salida</string>
+
 
     <string name="msg_loading">Espere un momento...</string>
     <string name="msg_required">"Todos los datos son Obligatorios"</string>

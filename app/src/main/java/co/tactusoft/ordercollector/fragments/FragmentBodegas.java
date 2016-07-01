@@ -47,8 +47,10 @@ public class FragmentBodegas extends Fragment {
     }
 
     private void setupList() {
-        adapter = new BodegasAdapter(getActivity(), list);
-        listView.setAdapter(adapter);
+        if(list!=null) {
+            adapter = new BodegasAdapter(getActivity(), list);
+            listView.setAdapter(adapter);
+        }
     }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, List<Bodegas>> {

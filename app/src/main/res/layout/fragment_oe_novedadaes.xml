@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/lyr_foto"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:text="@string/oe_salida_subtitle"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"/>
+
+        <ImageView
+            android:id="@+id/imgView_pic"
+            android:tag="0"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/image_description"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/lyr_datos"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/lyr_foto">
+
+        <TextView
+            android:text="@string/oe_obs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:id="@+id/input_obs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:minLines="5"
+            android:maxLines="10" />
+
+    </LinearLayout>
+
+</RelativeLayout>

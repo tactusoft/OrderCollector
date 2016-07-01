@@ -21,4 +21,8 @@ public class Constants {
 
     public static final int TYPE_ITEM_COLORED = 1;
     public static final int TYPE_ITEM_NORMAL = 0;
+
+    public static final int RESULT_OK = -1;
+    public static final int RESULT_LOAD_IMAGE = 1000;
+    public static final int REQUEST_IMAGE_CAPTURE = 1001;
 }

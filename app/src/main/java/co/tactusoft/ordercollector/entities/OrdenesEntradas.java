@@ -33,6 +33,8 @@ public class OrdenesEntradas implements Serializable {
     private String conductorNombres;
     private String conductorApellidos;
     private String conductorTelefono;
+    private String observacionesSalida;
+    private String imagenSalida;
     private Boolean bloqueado;
     private Integer sincronizado;
 
@@ -229,6 +231,22 @@ public class OrdenesEntradas implements Serializable {
 
     public void setConductorTelefono(String conductorTelefono) {
         this.conductorTelefono = conductorTelefono;
+    }
+
+    public String getObservacionesSalida() {
+        return observacionesSalida;
+    }
+
+    public void setObservacionesSalida(String observacionesSalida) {
+        this.observacionesSalida = observacionesSalida;
+    }
+
+    public String getImagenSalida() {
+        return imagenSalida;
+    }
+
+    public void setImagenSalida(String imagenSalida) {
+        this.imagenSalida = imagenSalida;
     }
 
     public Boolean getBloqueado() {

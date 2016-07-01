@@ -22,6 +22,8 @@ import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.Usuario;
 import co.tactusoft.ordercollector.fragments.FragmentBodegas;
 import co.tactusoft.ordercollector.fragments.FragmentHome;
+import co.tactusoft.ordercollector.fragments.FragmentOENovedades;
+import co.tactusoft.ordercollector.fragments.FragmentOESalida;
 import co.tactusoft.ordercollector.fragments.FragmentOrdenesEntrada;
 import co.tactusoft.ordercollector.fragments.FragmentOrdenesEntradaDetalle;
 import co.tactusoft.ordercollector.fragments.FragmentVehiculo;
@@ -88,7 +90,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showFragment(Fragment fragment, int title) {
-        getSupportActionBar().setTitle(title);
+        if(title!=0) {
+            getSupportActionBar().setTitle(title);
+        }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
@@ -110,11 +114,12 @@ public class MainActivity extends AppCompatActivity
                         showFragment(new FragmentHome(), R.string.navigation_item_home);
                         navigationView.getMenu().getItem(0).setChecked(true);
                         return;
-                    } else if (frag instanceof FragmentVehiculo) {
-                        showFragment(new FragmentOrdenesEntradaDetalle(), R.string.navigation_item_home);
-                        return;
                     } else if (frag instanceof FragmentVehiculoFotos) {
                         showFragment(FragmentVehiculo.newInstance(Singleton.getInstance().getOrdenesEntradas()), R.string.navigation_item_oe);
+                        return;
+                    } else if (frag instanceof FragmentVehiculo || frag instanceof FragmentOESalida
+                            || frag instanceof FragmentOENovedades) {
+                        showFragment(new FragmentOrdenesEntradaDetalle(), 0);
                         return;
                     }
                 }

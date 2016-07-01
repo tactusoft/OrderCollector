@@ -121,6 +121,24 @@ public class FragmentOrdenesEntradaDetalle extends Fragment {
             }
         });
 
+        imgOeOpcion4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!selected.getEstadoOrden().equals(Constants.ESTADOS_ORDENES.ACEPTADA.name())) {
+                    showFragmentOENovedades();
+                }
+            }
+        });
+
+        imgOeOpcion6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!selected.getEstadoOrden().equals(Constants.ESTADOS_ORDENES.ACEPTADA.name())) {
+                    showFragmentOESalida();
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -145,6 +163,18 @@ public class FragmentOrdenesEntradaDetalle extends Fragment {
     public void showFragmentVehiculo() {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, FragmentVehiculo.newInstance(selected));
+        ft.commit();
+    }
+
+    public void showFragmentOENovedades() {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, FragmentOENovedades.newInstance(selected));
+        ft.commit();
+    }
+
+    public void showFragmentOESalida() {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, FragmentOESalida.newInstance(selected));
         ft.commit();
     }
 

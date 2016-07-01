@@ -98,20 +98,22 @@ public class FragmentOrdenesEntrada extends Fragment {
 
 
     private void setupList() {
-        list = new LinkedList<>();
-        for(OrdenesEntradas row : allList) {
-            if (mOEAceptadaMenuItem.isChecked() && row.getEstadoOrden().equals("ACEPTADA")) {
-                list.add(row);
-            } else if (mOEConfirmadaMenuItem.isChecked() && row.getEstadoOrden().equals("CONFIRMADA")) {
-                list.add(row);
-            } else if (mOEEnEjecucionMenuItem.isChecked() && row.getEstadoOrden().equals("EN_EJECCUCION")) {
-                list.add(row);
-            } else if (mOEFinalizadaMenuItem.isChecked() && row.getEstadoOrden().equals("FINALIZADA")) {
-                list.add(row);
+        if(allList!=null) {
+            list = new LinkedList<>();
+            for (OrdenesEntradas row : allList) {
+                if (mOEAceptadaMenuItem.isChecked() && row.getEstadoOrden().equals("ACEPTADA")) {
+                    list.add(row);
+                } else if (mOEConfirmadaMenuItem.isChecked() && row.getEstadoOrden().equals("CONFIRMADA")) {
+                    list.add(row);
+                } else if (mOEEnEjecucionMenuItem.isChecked() && row.getEstadoOrden().equals("EN_EJECCUCION")) {
+                    list.add(row);
+                } else if (mOEFinalizadaMenuItem.isChecked() && row.getEstadoOrden().equals("FINALIZADA")) {
+                    list.add(row);
+                }
             }
+            adapter = new OrdenesEntradaAdapter(getActivity(), list);
+            listView.setAdapter(adapter);
         }
-        adapter = new OrdenesEntradaAdapter(getActivity(), list);
-        listView.setAdapter(adapter);
     }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, List<OrdenesEntradas>> {

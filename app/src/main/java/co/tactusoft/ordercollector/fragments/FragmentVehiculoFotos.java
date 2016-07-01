@@ -34,6 +34,7 @@ import co.tactusoft.ordercollector.adapters.FotoDescAdapter;
 import co.tactusoft.ordercollector.entities.FotoDesc;
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.VehiculosFoto;
+import co.tactusoft.ordercollector.util.Constants;
 import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Utils;
 
@@ -43,10 +44,6 @@ import co.tactusoft.ordercollector.util.Utils;
  * csarmiento@gentemovil.co
  */
 public class FragmentVehiculoFotos extends Fragment {
-
-    private static final int RESULT_OK = -1;
-    private static final int RESULT_LOAD_IMAGE = 1000;
-    private static final int REQUEST_IMAGE_CAPTURE = 1001;
 
     GridView androidGridView;
     List<FotoDesc> list;
@@ -147,11 +144,11 @@ public class FragmentVehiculoFotos extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK
+        if (requestCode == Constants.RESULT_LOAD_IMAGE && resultCode == Constants.RESULT_OK
                 && null != data) {
             loadPictureAction(data);
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE
-                && resultCode == RESULT_OK) {
+        } else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE
+                && resultCode == Constants.RESULT_OK) {
             takePictureAction(data);
         }
     }
@@ -273,7 +270,7 @@ public class FragmentVehiculoFotos extends Fragment {
                     .resolveActivity((getActivity())
                             .getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent,
-                        REQUEST_IMAGE_CAPTURE);
+                        Constants.REQUEST_IMAGE_CAPTURE);
             }
         } catch(ActivityNotFoundException exp){
             Toast.makeText(getActivity(), "Problema al activar la cámara!", Toast.LENGTH_SHORT).show();
@@ -284,7 +281,7 @@ public class FragmentVehiculoFotos extends Fragment {
         try {
             Intent i = new Intent(Intent.ACTION_PICK,
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(i, RESULT_LOAD_IMAGE);
+            startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
         } catch(ActivityNotFoundException exp){
             Toast.makeText(getActivity(), "No File (Manager / Explorer)etc Found In Your Device", Toast.LENGTH_SHORT).show();
         }

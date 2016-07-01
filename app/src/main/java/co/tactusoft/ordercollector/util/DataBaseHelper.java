@@ -39,7 +39,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             "fecha_confirmacion, usuario_confirmacion, fecha_aprobacion_cliente, usuario_aprobacion_cliente,\n" +
             "transportadora_id, tipo_vehiculo_id, numero_placa_vehiculo, numero_placa_remolque,\n" +
             "fecha_notificacion_dellegada, fecha_registro_dellegada, conductor_numero_identificacion, conductor_nombres,\n" +
-            "conductor_apellidos, conductor_telefono, bloqueado, sincronizado\n" +
+            "conductor_apellidos, conductor_telefono, observaciones_salida, imagen_salida, bloqueado, sincronizado\n" +
             "FROM ordenes_entrada\n";
 
     /**
@@ -240,8 +240,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setConductorNombres(cur.getString(21));
                 object.setConductorApellidos(cur.getString(22));
                 object.setConductorTelefono(cur.getString(23));
-                object.setBloqueado(cur.getInt(24) == 1);
-                object.setSincronizado(cur.getInt(25));
+                object.setObservacionesSalida(cur.getString(24));
+                object.setImagenSalida(cur.getString(25));
+                object.setBloqueado(cur.getInt(26) == 1);
+                object.setSincronizado(cur.getInt(27));
             }
             cur.close();
         } catch (SQLException e) {
@@ -284,6 +286,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setConductorNombres(cur.getString(21));
                 object.setConductorApellidos(cur.getString(22));
                 object.setConductorTelefono(cur.getString(23));
+                object.setObservacionesSalida(cur.getString(24));
+                object.setImagenSalida(cur.getString(25));
                 object.setBloqueado(cur.getInt(24) == 1);
                 object.setSincronizado(cur.getInt(25));
                 result.add(object);
@@ -328,6 +332,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 object.setConductorNombres(cur.getString(21));
                 object.setConductorApellidos(cur.getString(22));
                 object.setConductorTelefono(cur.getString(23));
+                object.setObservacionesSalida(cur.getString(24));
+                object.setImagenSalida(cur.getString(25));
                 object.setBloqueado(cur.getInt(24) == 1);
                 object.setSincronizado(cur.getInt(25));
             }
@@ -368,6 +374,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             row.put("conductor_nombres", object.getConductorNombres());
             row.put("conductor_apellidos", object.getConductorApellidos());
             row.put("conductor_telefono", object.getConductorTelefono());
+            row.put("observaciones_salida", object.getObservacionesSalida());
+            row.put("imagen_salida", object.getImagenSalida());
             row.put("bloqueado", object.getBloqueado()?1:0);
             long id = myDataBase.insert("ordenes_entrada", null, row);
             if (id == -1) {
