@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import co.tactusoft.ordercollector.entities.Novedad;
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.Usuario;
 import co.tactusoft.ordercollector.entities.VehiculosFoto;
@@ -419,6 +420,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertNovedad(Novedad object) {
+        ContentValues row = new ContentValues();
+        try {
+            openDataBase();
+            row.put("id", object.getId());
+            row.put("orden_id", object.getOrdenId());
+            row.put("tipo", object.getTipo());
+            row.put("clase", object.getClase());
+            row.put("observacion", object.getObservacion());
+            row.put("foto", object.getFoto());
+            row.put("sincronizado", object.getSincronizado());
+            long id = myDataBase.insert("novedad", null, row);
+            if (id == -1) {
+                myDataBase.update("novedad", row,
+                        "id = ?", new String[]{String.valueOf(object.getId())});
+            } else {
+                object.setId(id);
+            }
+        } catch (SQLiteConstraintException e) {
+            myDataBase.update("novedad", row,
+                    "id = ?", new String[]{String.valueOf(object.getId())});
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
     public List<VehiculosFoto> getListVehiculosFoto(Integer ordenId) {
         List<VehiculosFoto> list = new LinkedList<>();
         VehiculosFoto object;
@@ -443,6 +472,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             close();
         }
         return list;
+    }
+
+    public List<Novedad> getListNovedad(Integer ordenId) {
+        List<Novedad> list = new LinkedList<>();
+        Novedad object;
+        try {
+            openDataBase();
+            Cursor cur = myDataBase.rawQuery("SELECT id, orden_id, tipo, clase, foto, observacion, sincronizado " +
+                    "FROM novedad WHERE orden_id = ? ORDER BY id", new String[] { String.valueOf(ordenId) });
+            while (cur.moveToNext()) {
+                object = new Novedad();
+                object.setId(cur.getLong(0));
+                object.setOrdenId(cur.getInt(1));
+                object.setTipo(cur.getString(2));
+                object.setClase(cur.getString(3));;
+                object.setFoto(cur.getString(4));
+                object.setObservacion(cur.getString(5));
+                object.setSincronizado(cur.getInt(6));
+                list.add(object);
+            }
+            cur.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+        return list;
+    }
+
+    public Integer deleteNovedad(Long id) {
+        return deleteTable("Novedad", "id = " + id);
     }
 
     private Integer deleteTable(String table, String where) {

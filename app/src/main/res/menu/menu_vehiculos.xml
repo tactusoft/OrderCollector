@@ -13,5 +13,11 @@
         android:icon="@drawable/ic_action_picture"
         app:showAsAction="always"
         android:title="Descargar"/>
+    <item
+        android:id="@+id/item_add"
+        android:icon="@drawable/ic_action_add"
+        app:showAsAction="always"
+        android:title="Adicionar"
+        android:visible="false"/>
 
 </menu>

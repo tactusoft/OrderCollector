@@ -57,9 +57,27 @@
     <string name="veh_fot_title">Fotos del Vehículo</string>
     <string name="oe_salida_subtitle">Datos de Salida</string>
 
+    <string name="oe_novedades_subtitle">Novedades</string>
+    <string name="oe_novedades_subtitle_1">Novedades en Ingreso</string>
+    <string name="oe_tipo">Tipo de Novedad</string>
+    <string name="oe_clase">Clase de Novedad</string>
+
+    <string name="btn_save">Aceptar</string>
+    <string name="btn_delete">Eliminar</string>
 
     <string name="msg_loading">Espere un momento...</string>
     <string name="msg_required">"Todos los datos son Obligatorios"</string>
     <string name="msg_ok">"Operación Realizada con Éxito!"</string>
+    <string name="msg_prompt">-- Seleccione --</string>
+
+    <string-array name="oe_novedades_tipo">
+        <item>Ingreso</item>
+    </string-array>
+
+    <string-array name="oe_novedades_clase">
+        <item>Faltantes</item>
+        <item>Sobrantes</item>
+        <item>Daño de Carpa</item>
+    </string-array>
 
 </resources>

@@ -96,4 +96,16 @@ public class Utils {
         }
         return bitmap;
     }
+
+    public static int getIndexFromArray(String[] array, String value){
+        int index = 0;
+        for (String s : array) {
+            int i = s.indexOf(value);
+            if (i >= 0) {
+                break;
+            }
+            index++;
+        }
+        return index;
+    }
 }

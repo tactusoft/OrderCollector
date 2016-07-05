@@ -168,7 +168,7 @@ public class FragmentOrdenesEntradaDetalle extends Fragment {
 
     public void showFragmentOENovedades() {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, FragmentOENovedades.newInstance(selected));
+        ft.replace(R.id.content_frame, FragmentOENovedades.newInstance(selected), FragmentOENovedades.TAG);
         ft.commit();
     }
 

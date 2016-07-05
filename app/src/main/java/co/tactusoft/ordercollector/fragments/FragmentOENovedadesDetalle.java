@@ -8,29 +8,27 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import co.tactusoft.ordercollector.R;
-import co.tactusoft.ordercollector.adapters.FotoDescAdapter;
-import co.tactusoft.ordercollector.entities.FotoDesc;
-import co.tactusoft.ordercollector.entities.OrdenesEntradas;
-import co.tactusoft.ordercollector.entities.VehiculosFoto;
+import co.tactusoft.ordercollector.entities.Novedad;
 import co.tactusoft.ordercollector.util.Constants;
 import co.tactusoft.ordercollector.util.DataBaseHelper;
+import co.tactusoft.ordercollector.util.UniqueFileName;
 import co.tactusoft.ordercollector.util.Utils;
 
 /**
@@ -38,42 +36,44 @@ import co.tactusoft.ordercollector.util.Utils;
  * 7/06/16
  * csarmiento@gentemovil.co
  */
-public class FragmentOESalida extends Fragment {
+public class FragmentOENovedadesDetalle extends DialogFragment implements View.OnClickListener {
 
-    OrdenesEntradas ordenesEntradas;
+    public static final String TAG = FragmentOENovedadesDetalle.class.getSimpleName();
+
+    Novedad selected;
     DataBaseHelper dataBaseHelper;
 
     ImageView imgViewPic;
+    Spinner inputTipo;
+    Spinner inputClase;
     EditText inputObs;
+    Button btnSave;
+    Button btnDelete;
 
-    public FragmentOESalida() {
+    public FragmentOENovedadesDetalle() {
         super();
     }
 
-    public static FragmentOESalida newInstance(OrdenesEntradas selected) {
-        FragmentOESalida f = new FragmentOESalida();
-        f.setOrdenesEntradas(selected);
+    public static FragmentOENovedadesDetalle newInstance(Novedad selected) {
+        FragmentOENovedadesDetalle f = new FragmentOENovedadesDetalle();
+        f.setSelected(selected);
         return f;
     }
 
-    public void setOrdenesEntradas(OrdenesEntradas ordenesEntradas) {
-        this.ordenesEntradas = ordenesEntradas;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_vehiculos, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-        menu.getItem(1).setVisible(false);
+    public void setSelected(Novedad selected) {
+        this.selected = selected;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         dataBaseHelper = new DataBaseHelper(getActivity());
-        setHasOptionsMenu(true);
-        View rootView = inflater.inflate(R.layout.fragment_oe_salida, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_oe_novedades_detalle, container, false);
         imgViewPic = (ImageView) rootView.findViewById(R.id.imgView_pic);
+        inputTipo = (Spinner) rootView.findViewById(R.id.input_tipo);
+        inputClase = (Spinner) rootView.findViewById(R.id.input_clase);
         inputObs = (EditText) rootView.findViewById(R.id.input_obs);
+        btnSave = (Button) rootView.findViewById(R.id.btn_save);
+        btnDelete = (Button) rootView.findViewById(R.id.btn_delete);
 
         imgViewPic.setImageResource(R.drawable.ic_action_help);
         imgViewPic.setTag(R.drawable.ic_action_help);
@@ -84,9 +84,64 @@ public class FragmentOESalida extends Fragment {
             }
         });
 
-        inputObs.setText(ordenesEntradas.getObservacionesSalida());
-        if(ordenesEntradas.getImagenSalida()!=null) {
-            imgViewPic.setImageBitmap(Utils.loadImageBitmap(getActivity(), ordenesEntradas.getImagenSalida()));
+        btnSave.setTransformationMethod(null);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String obs = inputObs.getText().toString();
+                if (obs.isEmpty() || imgViewPic.getTag().equals(R.drawable.ic_action_help)) {
+                    Toast.makeText(getActivity(), R.string.msg_required, Toast.LENGTH_SHORT).show();
+                } else {
+                    Bitmap pic = ((BitmapDrawable)imgViewPic.getDrawable()).getBitmap();
+                    String nameFile = new UniqueFileName(getActivity()).writeToFileRawData(pic);
+                    boolean isNew = false;
+                    if(selected.getId() == null) {
+                        isNew = true;
+                    }
+                    selected.setClase(inputClase.getSelectedItem().toString());
+                    selected.setTipo(inputTipo.getSelectedItem().toString());
+                    selected.setFoto(nameFile);
+                    selected.setObservacion(obs);
+                    dataBaseHelper.insertNovedad(selected);
+                    Toast.makeText(getActivity(), R.string.msg_ok, Toast.LENGTH_SHORT).show();
+                    FragmentOENovedades fragmentOENovedades = (FragmentOENovedades)getFragmentManager()
+                            .findFragmentByTag(FragmentOENovedades.TAG);
+                    if(isNew) {
+                        fragmentOENovedades.addNovedad(selected);
+                    } else {
+                        fragmentOENovedades.refreshAdapter();
+                    }
+                }
+            }
+        });
+
+        if (selected.getId()!=null) {
+            btnDelete.setEnabled(true);
+        } else {
+            btnDelete.setEnabled(false);
+        }
+
+        btnDelete.setTransformationMethod(null);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataBaseHelper.deleteNovedad(selected.getId());
+                Toast.makeText(getActivity(), R.string.msg_ok, Toast.LENGTH_SHORT).show();
+                FragmentOENovedades fragmentOENovedades = (FragmentOENovedades)getFragmentManager()
+                        .findFragmentByTag(FragmentOENovedades.TAG);
+                fragmentOENovedades.removeNovedad(selected);
+                dismiss();
+            }
+        });
+
+        if(selected.getFoto()!=null) {
+            Bitmap pic = Utils.loadImageBitmap(getActivity(), selected.getFoto());
+            imgViewPic.setImageBitmap(pic);
+            imgViewPic.setTag(pic.toString());
+
+            inputClase.setSelection(Utils.getIndexFromArray(getResources().getStringArray(R.array.oe_novedades_clase),
+                    selected.getClase()));
+            inputObs.setText(selected.getObservacion());
         }
 
         return rootView;
@@ -103,26 +158,8 @@ public class FragmentOESalida extends Fragment {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_save:
-                String obs = inputObs.getText().toString();
-                if (obs.isEmpty() || imgViewPic.getTag().equals(R.drawable.ic_action_help)) {
-                    Toast.makeText(getActivity(), R.string.msg_required, Toast.LENGTH_SHORT).show();
-                } else {
-                    Bitmap pic = ((BitmapDrawable)imgViewPic.getDrawable()).getBitmap();
-                    String nameFile = "img_" + ordenesEntradas.getId() + "_SALIDA.jpeg";
-                    Utils.saveImage(getActivity(), pic, nameFile);
-                    ordenesEntradas.setImagenSalida(nameFile);
-                    ordenesEntradas.setObservacionesSalida(obs);
-                    ordenesEntradas.setEstadoOrden(Constants.ESTADOS_ORDENES.FINALIZADA.name());
-                    dataBaseHelper.insertOrdenesEntradas(ordenesEntradas);
-                    Toast.makeText(getActivity(), R.string.msg_ok, Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-        return true;
+    public void onClick(View v) {
+
     }
 
     private void cameraIntent() {
