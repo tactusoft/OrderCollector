@@ -7,7 +7,8 @@
         android:id="@+id/lsv_ordenes_entrada"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"/>
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10px"/>
 
     <TextView
         android:id="@android:id/empty"

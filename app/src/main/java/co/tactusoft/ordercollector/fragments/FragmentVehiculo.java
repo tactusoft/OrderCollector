@@ -302,6 +302,7 @@ public class FragmentVehiculo extends Fragment {
                 dataBaseHelper.insertOrdenesEntradas(ordenesEntradas);
                 Singleton.getInstance().setOrdenesEntradas(ordenesEntradas);
                 Toast.makeText(getActivity(), R.string.msg_ok, Toast.LENGTH_SHORT).show();
+                ((MainActivity)getActivity()).showFragment(new FragmentOrdenesEntradaDetalle(), 0);
             }
         }
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import co.tactusoft.ordercollector.adapters.OrdenesEntradaAdapter;
 import co.tactusoft.ordercollector.entities.OrdenesEntradas;
 import co.tactusoft.ordercollector.entities.PaginadorOrdenesEntrada;
 import co.tactusoft.ordercollector.util.Constants;
+import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Singleton;
 
 /**
@@ -46,6 +49,12 @@ public class FragmentOrdenesEntrada extends Fragment {
     private MenuItem mOEEnEjecucionMenuItem = null;
     private MenuItem mOEFinalizadaMenuItem = null;
 
+    private DataBaseHelper dataBaseHelper;
+
+    public FragmentOrdenesEntrada() {
+        dataBaseHelper = new DataBaseHelper(getActivity());
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +67,26 @@ public class FragmentOrdenesEntrada extends Fragment {
         listView = (ListView) rootView.findViewById(R.id.lsv_ordenes_entrada);
         TextView emptyText = (TextView)rootView.findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                OrdenesEntradas selected = list.get(position);
+                int selectedId =  selected.getId();
+                dataBaseHelper.getListOrdenesEntradas();
+                OrdenesEntradas ordenesEntradasTemp = dataBaseHelper.getOrdenesEntradas(selectedId);
+                if (ordenesEntradasTemp != null) {
+                    selected = ordenesEntradasTemp;
+                }
+                selected.setBloqueado(true);
+                dataBaseHelper.insertOrdenesEntradas(selected);
+                Singleton.getInstance().setOrdenesEntradas(selected);
+                adapter.notifyDataSetChanged();
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, new FragmentOrdenesEntradaDetalle());
+                ft.commit();
+            }
+        });
         new HttpRequestTask(getActivity()).execute();
         return rootView;
     }
@@ -98,8 +127,8 @@ public class FragmentOrdenesEntrada extends Fragment {
 
 
     private void setupList() {
-        if(allList!=null) {
-            list = new LinkedList<>();
+        list = new LinkedList<>();
+        if(allList!=null && !allList.isEmpty()) {
             for (OrdenesEntradas row : allList) {
                 if (mOEAceptadaMenuItem.isChecked() && row.getEstadoOrden().equals("ACEPTADA")) {
                     list.add(row);
@@ -111,9 +140,11 @@ public class FragmentOrdenesEntrada extends Fragment {
                     list.add(row);
                 }
             }
-            adapter = new OrdenesEntradaAdapter(getActivity(), list);
-            listView.setAdapter(adapter);
+        } else {
+            list.add(Singleton.getInstance().getOrdenesEntradas());
         }
+        adapter = new OrdenesEntradaAdapter(getActivity(), list);
+        listView.setAdapter(adapter);
     }
 
     private class HttpRequestTask extends AsyncTask<Void, Void, List<OrdenesEntradas>> {

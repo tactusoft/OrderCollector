@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import co.tactusoft.ordercollector.MainActivity;
 import co.tactusoft.ordercollector.R;
 import co.tactusoft.ordercollector.adapters.FotoDescAdapter;
 import co.tactusoft.ordercollector.entities.FotoDesc;
@@ -119,6 +120,7 @@ public class FragmentOESalida extends Fragment {
                     ordenesEntradas.setEstadoOrden(Constants.ESTADOS_ORDENES.FINALIZADA.name());
                     dataBaseHelper.insertOrdenesEntradas(ordenesEntradas);
                     Toast.makeText(getActivity(), R.string.msg_ok, Toast.LENGTH_SHORT).show();
+                    ((MainActivity)getActivity()).showFragment(new FragmentOrdenesEntradaDetalle(), 0);
                 }
                 break;
         }

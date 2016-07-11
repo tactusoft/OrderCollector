@@ -19,6 +19,7 @@
     <string name="estado_oe_enjecucion">En Ejecución</string>
     <string name="estado_oe_finalizada">Finalizada</string>
 
+    <string name="bod_selected">Ha seleccionado la Bodega %S</string>
     <string name="bod_msg_vacio">Este usuario no tiene bodegas asignadas!</string>
 
     <string name="oe_title">Orden de Entrada: %S</string>
@@ -64,11 +65,13 @@
 
     <string name="btn_save">Aceptar</string>
     <string name="btn_delete">Eliminar</string>
+    <string name="btn_select">Seleccionar</string>
 
     <string name="msg_loading">Espere un momento...</string>
     <string name="msg_required">"Todos los datos son Obligatorios"</string>
     <string name="msg_ok">"Operación Realizada con Éxito!"</string>
     <string name="msg_prompt">-- Seleccione --</string>
+    <string name="msg_coming_soon">Esta opción está en proceso de construcción</string>
 
     <string-array name="oe_novedades_tipo">
         <item>Ingreso</item>

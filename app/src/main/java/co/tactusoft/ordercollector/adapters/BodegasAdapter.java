@@ -9,15 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.chauthai.swipereveallayout.SwipeRevealLayout;
-import com.chauthai.swipereveallayout.ViewBinderHelper;
-
 import java.util.List;
 
 import co.tactusoft.ordercollector.R;
 import co.tactusoft.ordercollector.entities.Bodegas;
 import co.tactusoft.ordercollector.util.Constants;
-import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Singleton;
 
 /**
@@ -28,15 +24,11 @@ import co.tactusoft.ordercollector.util.Singleton;
 public class BodegasAdapter extends ArrayAdapter<Bodegas> {
     private Context mContext;
     private LayoutInflater mInflater;
-    private final ViewBinderHelper binderHelper = new ViewBinderHelper();
-    private DataBaseHelper dataBaseHelper;
 
     public BodegasAdapter(Context context, List<Bodegas> objects) {
         super(context, R.layout.fragment_bodegas, objects);
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        binderHelper.setOpenOnlyOne(true);
-        dataBaseHelper = new DataBaseHelper(mContext.getApplicationContext());
     }
 
     @Override
@@ -54,12 +46,10 @@ public class BodegasAdapter extends ArrayAdapter<Bodegas> {
             convertView = mInflater.inflate(R.layout.row_bodegas, parent, false);
             holder = new ViewHolder();
             holder.frlItem  = (FrameLayout) convertView.findViewById(R.id.frl_item);
-            holder.btnEditSkyline = (TextView) convertView.findViewById(R.id.btn_edit_skyline);
             holder.textView = (TextView) convertView.findViewById(R.id.text);
             holder.textView2 = (TextView) convertView.findViewById(R.id.text2);
             holder.textView3 = (TextView) convertView.findViewById(R.id.text3);
             holder.textView4 = (TextView) convertView.findViewById(R.id.text4);
-            holder.swipeLayout = (SwipeRevealLayout) convertView.findViewById(R.id.swipe_layout);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -67,33 +57,18 @@ public class BodegasAdapter extends ArrayAdapter<Bodegas> {
 
         final Bodegas item = getItem(position);
         if (item != null) {
-            binderHelper.bind(holder.swipeLayout, String.valueOf(item.getBodegaId()));
             holder.textView.setText(item.getBodegaCodigo());
             holder.textView2.setText(item.getBodegaNombre());
             holder.textView3.setText(item.getBodegaCiudadNombre() );
             holder.textView4.setText(item.getBodegaDireccion());
-            holder.btnEditSkyline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bodegas selected = getItem(position);
-                    int selectedId =  selected.getBodegaId();
-                    int bodegaId =  selected.getBodegaId();
-                    Singleton.getInstance().getUsuario().setBodegaId(bodegaId);
-                    dataBaseHelper.insertUsuario(Singleton.getInstance().getUsuario());
-                    binderHelper.closeLayout(String.valueOf(selectedId));
-                    notifyDataSetChanged();
-                }
-            });
         }
 
         switch (getItemViewType(position)) {
             case Constants.TYPE_ITEM_COLORED:
                 holder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                holder.btnEditSkyline.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 break;
             case Constants.TYPE_ITEM_NORMAL:
                 holder.frlItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-                holder.btnEditSkyline.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 break;
         }
 
@@ -101,9 +76,7 @@ public class BodegasAdapter extends ArrayAdapter<Bodegas> {
     }
 
     private class ViewHolder {
-        private SwipeRevealLayout swipeLayout;
         private FrameLayout frlItem;
-        private TextView btnEditSkyline;
         private TextView textView;
         private TextView textView2;
         private TextView textView3;

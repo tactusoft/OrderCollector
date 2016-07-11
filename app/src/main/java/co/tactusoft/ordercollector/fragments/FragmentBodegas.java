@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -23,6 +25,7 @@ import co.tactusoft.ordercollector.R;
 import co.tactusoft.ordercollector.adapters.BodegasAdapter;
 import co.tactusoft.ordercollector.entities.Bodegas;
 import co.tactusoft.ordercollector.util.Constants;
+import co.tactusoft.ordercollector.util.DataBaseHelper;
 import co.tactusoft.ordercollector.util.Singleton;
 
 /**
@@ -35,6 +38,11 @@ public class FragmentBodegas extends Fragment {
     ListView listView;
     BodegasAdapter adapter;
     List<Bodegas> list;
+    private DataBaseHelper dataBaseHelper;
+
+    public FragmentBodegas(){
+        dataBaseHelper = new DataBaseHelper(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +50,19 @@ public class FragmentBodegas extends Fragment {
         listView = (ListView) rootView.findViewById(R.id.lsv_bodegas);
         TextView emptyText = (TextView)rootView.findViewById(android.R.id.empty);
         listView.setEmptyView(emptyText);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                Bodegas selected = list.get(position);
+                int bodegaId =  selected.getBodegaId();
+                Singleton.getInstance().getUsuario().setBodegaId(bodegaId);
+                dataBaseHelper.insertUsuario(Singleton.getInstance().getUsuario());
+                adapter.notifyDataSetChanged();
+                String message = getResources().getString(R.string.bod_selected, selected.getBodegaNombre());
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
         new HttpRequestTask(getActivity()).execute();
         return rootView;
     }
@@ -50,6 +71,8 @@ public class FragmentBodegas extends Fragment {
         if(list!=null) {
             adapter = new BodegasAdapter(getActivity(), list);
             listView.setAdapter(adapter);
+        } else {
+
         }
     }
 

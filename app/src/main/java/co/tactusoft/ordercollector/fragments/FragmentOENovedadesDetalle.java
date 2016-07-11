@@ -111,6 +111,7 @@ public class FragmentOENovedadesDetalle extends DialogFragment implements View.O
                     } else {
                         fragmentOENovedades.refreshAdapter();
                     }
+                    dismiss();
                 }
             }
         });

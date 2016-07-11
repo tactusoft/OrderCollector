@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -121,12 +122,26 @@ public class FragmentOrdenesEntradaDetalle extends Fragment {
             }
         });
 
+        imgOeOpcion3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), R.string.msg_coming_soon, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         imgOeOpcion4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!selected.getEstadoOrden().equals(Constants.ESTADOS_ORDENES.ACEPTADA.name())) {
                     showFragmentOENovedades();
                 }
+            }
+        });
+
+        imgOeOpcion5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), R.string.msg_coming_soon, Toast.LENGTH_SHORT).show();
             }
         });
 
